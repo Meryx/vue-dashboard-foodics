@@ -1,18 +1,13 @@
 <template>
   <div
     :style="{ width: sidebarWidth }"
-    class="h-full flex flex-col pt-6 bg-light-gray dark:bg-dark-gray transition-all duration-300"
+    class="h-full flex flex-col pt-6 bg-light-gray dark:bg-dark-gray transition-width duration-300"
   >
     <div class="flex items-center justify-between px-4">
-      <span
-        v-if="!isCollapsed"
-        :class="['text-charcoal dark:text-soft-gray', 'text-xl font-semibold']"
+      <span v-if="!isCollapsed" class="text-charcoal dark:text-soft-gray text-xl font-semibold"
         >My App</span
       >
-      <button
-        @click="toggleSidebar"
-        :class="['text-charcoal dark:text-soft-gray', 'focus:outline-none']"
-      >
+      <button @click="toggleSidebar" class="text-charcoal dark:text-soft-gray focus:outline-none">
         <span v-if="isCollapsed">Expand</span>
         <span v-else>Collapse</span>
       </button>

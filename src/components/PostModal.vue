@@ -2,11 +2,7 @@
   <div class="fixed inset-0 flex items-center justify-center z-50">
     <div class="absolute inset-0 bg-black opacity-50" @click="close"></div>
     <div
-      :class="[
-        'rounded-lg shadow-lg p-6 z-10 max-w-md mx-auto',
-        'bg-white dark:bg-soft-black',
-        'text-charcoal dark:text-soft-gray',
-      ]"
+      class="rounded-lg shadow-lg p-6 z-10 max-w-md mx-auto bg-white dark:bg-soft-black text-charcoal dark:text-soft-gray"
     >
       <h2 class="text-xl font-bold mb-4">{{ post.title }}</h2>
       <p class="mb-4">{{ post.body }}</p>
@@ -29,12 +25,7 @@
 
       <button
         @click="close"
-        :class="[
-          'mt-4 px-4 py-2 rounded',
-          'bg-bright-blue text-white',
-          'hover:bg-blue-600',
-          'focus:outline-none',
-        ]"
+        class="mt-4 px-4 py-2 rounded bg-bright-blue text-white hover:bg-blue-600 focus:outline-none"
       >
         Close
       </button>

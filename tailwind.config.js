@@ -14,6 +14,9 @@ export default {
         'soft-black': '#1E1E1E',
         'medium-gray': '#3A3A3A',
       },
+      transitionProperty: {
+        width: 'width',
+      },
     },
   },
   plugins: [],

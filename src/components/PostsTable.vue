@@ -1,27 +1,17 @@
 <template>
   <div>
     <div v-if="isLoading" class="text-center">Loading posts...</div>
-    <div v-else-if="error" :class="['text-center', 'text-red-500']">{{ error }}</div>
+    <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
     <table class="min-w-full leading-normal">
       <thead>
         <tr>
           <th
-            :class="[
-              'px-5 py-3 border-b-2 text-left text-sm font-semibold uppercase tracking-wider',
-              'bg-off-white dark:bg-soft-black',
-              'text-charcoal dark:text-soft-gray',
-              'border-soft-gray dark:border-medium-gray',
-            ]"
+            class="px-5 py-3 border-b-2 text-left text-sm font-semibold uppercase tracking-wider bg-off-white dark:bg-soft-black text-charcoal dark:text-soft-gray border-soft-gray dark:border-medium-gray"
           >
             Title
           </th>
           <th
-            :class="[
-              'px-5 py-3 border-b-2 text-left text-sm font-semibold uppercase tracking-wider',
-              'bg-off-white dark:bg-soft-black',
-              'text-charcoal dark:text-soft-gray',
-              'border-soft-gray dark:border-medium-gray',
-            ]"
+            class="px-5 py-3 border-b-2 text-left text-sm font-semibold uppercase tracking-wider bg-off-white dark:bg-soft-black text-charcoal dark:text-soft-gray border-soft-gray dark:border-medium-gray"
           >
             Body
           </th>
@@ -31,21 +21,13 @@
         <tr
           v-for="post in posts"
           :key="post.id"
-          :class="[
-            'border-b',
-            'bg-off-white dark:bg-soft-black',
-            'border-soft-gray dark:border-medium-gray',
-          ]"
+          class="border-b bg-off-white dark:bg-soft-black border-soft-gray dark:border-medium-gray"
         >
           <td class="px-5 py-5">
             <a
               href="#"
               @click.prevent="openPostModal(post)"
-              :class="[
-                'hover:underline',
-                'text-charcoal dark:text-soft-gray',
-                'hover:text-bright-blue dark:hover:text-bright-blue',
-              ]"
+              class="hover:underline text-charcoal dark:text-soft-gray hover:text-bright-blue dark:hover:text-bright-blue"
             >
               {{ post.title }}
             </a>
@@ -104,7 +86,6 @@ function closeModal() {
 }
 
 const buttonClasses = [
-  'ml-2 text-bright-blue hover:underline focus:outline-none',
-  'dark:text-bright-blue dark:hover:underline',
+  'ml-2 text-bright-blue hover:underline focus:outline-none dark:text-bright-blue dark:hover:underline',
 ];
 </script>
