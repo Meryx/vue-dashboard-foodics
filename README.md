@@ -42,40 +42,34 @@ To be filled later...
 
 This application utilizes Tailwind CSS's predefined colors.
 
-### Light Theme
+### Light Mode
 
-- **Background**: `gray-50`
-- **Text**: `gray-900`
-- **Header and Sidebar Background**: `white`
-- **Header and Sidebar Text**: `gray-900`
-- **Table Background**: `white`
-- **Table Header Text**: `gray-700`
-- **Table Row Text**: `gray-900`
-- **Modal Background**: `white`
-- **Modal Text**: `gray-900`
-- **Buttons**:
-  - Background: `indigo-600`
-  - Hover Background: `indigo-700`
-  - Text: `white`
-- **Post Titles**:
-  - Text: `indigo-600`
-  - Hover Text: `indigo-800`
+- **Sidebar**:
+  - **Background**: `#F5F5F5` (Light Gray)
+  - **Text**: `#333333` (Charcoal)
+  - **Item Hover**: `#E0E0E0` (Soft Gray)
+- **Header**:
+  - **Background**: `#FFFFFF` (White)
+  - **Text**: `#333333` (Charcoal)
+- **Row (Posts)**:
+  - **Background**: `#FAFAFA` (Off-White)
+  - **Text**: `#333333` (Charcoal)
+- **Button**:
+  - **Background**: `#007BFF` (Bright Blue)
+  - **Text**: `#FFFFFF` (White)
 
-### Dark Theme
+### Dark Mode
 
-- **Background**: `gray-900`
-- **Text**: `gray-100`
-- **Header and Sidebar Background**: `gray-800`
-- **Header and Sidebar Text**: `gray-100`
-- **Table Background**: `gray-800`
-- **Table Header Text**: `gray-100`
-- **Table Row Text**: `gray-100`
-- **Modal Background**: `gray-800`
-- **Modal Text**: `gray-100`
-- **Buttons**:
-  - Background: `indigo-500`
-  - Hover Background: `indigo-600`
-  - Text: `gray-100`
-- **Post Titles**:
-  - Text: `indigo-400`
-  - Hover Text: `indigo-200`
+- **Sidebar**:
+  - **Background**: `#2C2C2C` (Dark Gray)
+  - **Text**: `#E0E0E0` (Light Gray)
+  - **Item Hover**: `#3A3A3A` (Medium Gray)
+- **Header**:
+  - **Background**: `#2A2A2A` (Very Dark Gray)
+  - **Text**: `#E0E0E0` (Light Gray)
+- **Row (Posts)**:
+  - **Background**: `#1E1E1E` (Soft Black)
+  - **Text**: `#E0E0E0` (Light Gray)
+- **Button**:
+  - **Background**: `#007BFF` (Bright Blue)
+  - **Text**: `#FFFFFF` (White)

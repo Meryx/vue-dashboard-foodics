@@ -1,7 +1,7 @@
 <template>
   <button @click="toggleDarkMode" class="focus:outline-none">
-    <span v-if="isDarkMode">🌞 Light Mode</span>
-    <span v-else>🌜 Dark Mode</span>
+    <span v-if="isDarkMode" :class="['text-soft-gray']">🌞 Light Mode</span>
+    <span v-else :class="['text-charcoal']">🌜 Dark Mode</span>
   </button>
 </template>
 

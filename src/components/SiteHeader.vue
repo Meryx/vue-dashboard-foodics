@@ -1,12 +1,13 @@
 <template>
   <header
-    class="fixed top-0 left-0 right-0 bg-white text-gray-900 shadow dark:bg-gray-800 dark:text-gray-100"
+    :class="[
+      'flex items-center justify-between px-4 py-2 shadow',
+      'bg-white dark:bg-very-dark-gray',
+    ]"
   >
-    <div class="flex items-center justify-between p-4">
-      <h1 class="text-xl font-semibold">Dashboard Title</h1>
-      <div class="flex items-center space-x-4">
-        <DarkModeToggle />
-      </div>
+    <h1 :class="['text-xl font-semibold', 'text-charcoal dark:text-soft-gray']">Dashboard Title</h1>
+    <div class="flex items-center space-x-4">
+      <DarkModeToggle />
     </div>
   </header>
 </template>

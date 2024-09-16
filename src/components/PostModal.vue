@@ -2,7 +2,11 @@
   <div class="fixed inset-0 flex items-center justify-center z-50">
     <div class="absolute inset-0 bg-black opacity-50" @click="close"></div>
     <div
-      class="bg-white text-gray-900 rounded-lg shadow-lg p-6 z-10 max-w-md mx-auto dark:bg-gray-800 dark:text-gray-100"
+      :class="[
+        'rounded-lg shadow-lg p-6 z-10 max-w-md mx-auto',
+        'bg-white dark:bg-soft-black',
+        'text-charcoal dark:text-soft-gray',
+      ]"
     >
       <h2 class="text-xl font-bold mb-4">{{ post.title }}</h2>
       <p class="mb-4">{{ post.body }}</p>
@@ -25,7 +29,12 @@
 
       <button
         @click="close"
-        class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:text-gray-100"
+        :class="[
+          'mt-4 px-4 py-2 rounded',
+          'bg-bright-blue text-white',
+          'hover:bg-blue-600',
+          'focus:outline-none',
+        ]"
       >
         Close
       </button>
@@ -49,21 +58,21 @@ const emit = defineEmits(['close']);
 const user = ref(null);
 const comments = ref([]);
 
-const fetchUser = async () => {
+async function fetchUser() {
   try {
     user.value = await apiService.fetchUser(props.post.userId);
   } catch (error) {
     console.error('Error fetching user:', error);
   }
-};
+}
 
-const fetchComments = async () => {
+async function fetchComments() {
   try {
     comments.value = await apiService.fetchComments(props.post.id);
   } catch (error) {
     console.error('Error fetching comments:', error);
   }
-};
+}
 
 watch(
   () => props.post,
@@ -76,7 +85,7 @@ watch(
   { immediate: true }
 );
 
-const close = () => {
+function close() {
   emit('close');
-};
+}
 </script>
