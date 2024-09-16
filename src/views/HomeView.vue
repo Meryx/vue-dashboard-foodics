@@ -1,6 +1,7 @@
 <template>
   <div class="flex">
-    <Sidebar />
+    <SiteHeader />
+    <SiteSidebar />
 
     <div class="flex-1 p-6">
       <PostsTable />
@@ -9,6 +10,7 @@
 </template>
 
 <script setup>
-import Sidebar from '../components/SiteSidebar.vue';
+import SiteSidebar from '../components/SiteSidebar.vue';
 import PostsTable from '../components/PostsTable.vue';
+import SiteHeader from '../components/SiteHeader.vue';
 </script>

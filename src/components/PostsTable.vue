@@ -2,15 +2,15 @@
   <div>
     <div v-if="isLoading" class="text-center">Loading posts...</div>
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
-    <table v-else class="min-w-full leading-normal">
+    <table class="min-w-full leading-normal">
       <thead>
         <tr>
-          <th class="px-5 py-3 border-b-2">Title</th>
-          <th class="px-5 py-3 border-b-2">Body</th>
+          <th class="px-5 py-3 border-b-2 bg-gray-100 dark:bg-gray-700">Title</th>
+          <th class="px-5 py-3 border-b-2 bg-gray-100 dark:bg-gray-700">Body</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="post in posts" :key="post.id">
+        <tr v-for="post in posts" :key="post.id" class="bg-white dark:bg-gray-800">
           <td class="px-5 py-5 border-b">
             <a href="#" @click.prevent="openPostModal(post)" class="text-blue-500 hover:underline">
               {{ post.title }}
