@@ -1,7 +1,9 @@
 <template>
   <div class="fixed inset-0 flex items-center justify-center z-50">
     <div class="absolute inset-0 bg-black opacity-50" @click="close"></div>
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 z-10 max-w-md mx-auto">
+    <div
+      class="bg-white text-gray-900 rounded-lg shadow-lg p-6 z-10 max-w-md mx-auto dark:bg-gray-800 dark:text-gray-100"
+    >
       <h2 class="text-xl font-bold mb-4">{{ post.title }}</h2>
       <p class="mb-4">{{ post.body }}</p>
 
@@ -21,7 +23,12 @@
         </ul>
       </div>
 
-      <button @click="close" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Close</button>
+      <button
+        @click="close"
+        class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 dark:text-gray-100"
+      >
+        Close
+      </button>
     </div>
   </div>
 </template>

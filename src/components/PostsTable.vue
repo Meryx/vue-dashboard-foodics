@@ -5,14 +5,30 @@
     <table class="min-w-full leading-normal">
       <thead>
         <tr>
-          <th class="px-5 py-3 border-b-2 bg-gray-100 dark:bg-gray-700">Title</th>
-          <th class="px-5 py-3 border-b-2 bg-gray-100 dark:bg-gray-700">Body</th>
+          <th
+            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+          >
+            Title
+          </th>
+          <th
+            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider dark:border-gray-700 dark:bg-gray-700 dark:text-gray-100"
+          >
+            Body
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="post in posts" :key="post.id" class="bg-white dark:bg-gray-800">
+        <tr
+          v-for="post in posts"
+          :key="post.id"
+          class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+        >
           <td class="px-5 py-5 border-b">
-            <a href="#" @click.prevent="openPostModal(post)" class="text-blue-500 hover:underline">
+            <a
+              href="#"
+              @click.prevent="openPostModal(post)"
+              class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-200 hover:underline"
+            >
               {{ post.title }}
             </a>
           </td>
