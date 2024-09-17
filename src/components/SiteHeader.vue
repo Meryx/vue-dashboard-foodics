@@ -9,9 +9,16 @@
       >
         <Bars3Icon class="h-6 w-6" />
       </button>
-      <h1 class="text-xl font-semibold text-charcoal dark:text-soft-gray">Dashboard Title</h1>
+      <h1 class="text-xl font-semibold text-charcoal dark:text-soft-gray">Posts Dashboard</h1>
     </div>
-    <DarkModeToggle />
+
+    <!-- Dark mode toggle -->
+    <div class="flex items-center space-x-4">
+      <DarkModeToggle />
+
+      <!-- User avatar -->
+      <img :src="avatarImage" alt="User Avatar" class="h-14 w-14 rounded-full object-cover" />
+    </div>
   </header>
 </template>
 
@@ -19,6 +26,7 @@
 import DarkModeToggle from './DarkModeToggle.vue';
 import { useSidebarState } from '../composables/useSidebarState';
 import { Bars3Icon } from '@heroicons/vue/24/solid';
+import avatarImage from '../assets/avatar.jpg';
 
 const { toggleSidebar } = useSidebarState();
 </script>
