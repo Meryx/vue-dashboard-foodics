@@ -3,11 +3,7 @@
     <SiteSidebar />
     <div class="flex flex-col flex-1">
       <SiteHeader />
-      <div class="relative flex-1 overflow-hidden pt-14">
-        <div class="absolute inset-0 md:p-6">
-          <PostsTable />
-        </div>
-      </div>
+      <PostsTable />
     </div>
   </div>
 </template>
