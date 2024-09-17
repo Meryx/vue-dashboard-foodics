@@ -104,7 +104,6 @@
                   @click.prevent="openPostModal(post)"
                   :class="[
                     'hover:underline text-charcoal dark:text-soft-gray hover:text-bright-blue dark:hover:text-bright-blue block',
-                    !expandedPosts.has(post.id) ? 'truncate' : 'whitespace-normal break-words',
                   ]"
                 >
                   {{ post.title }}

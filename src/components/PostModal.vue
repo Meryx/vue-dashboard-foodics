@@ -1,41 +1,88 @@
 <template>
   <div class="fixed inset-0 flex items-center justify-center z-50">
+    <!-- Background overlay -->
     <div class="absolute inset-0 bg-black opacity-50" @click="close"></div>
+
+    <!-- Modal content -->
     <div
-      class="rounded-lg shadow-lg p-6 z-10 max-w-md mx-auto bg-white dark:bg-soft-black text-charcoal dark:text-soft-gray"
+      class="md:rounded-md shadow-lg p-6 z-20 h-[60vh] w-[90vw] mx-auto bg-white dark:bg-soft-black text-charcoal dark:text-soft-gray overflow-auto max-h-screen md:max-h-[90vh] scrollbar-custom"
     >
-      <h2 class="text-xl font-bold mb-4">{{ post.title }}</h2>
-      <p class="mb-4">{{ post.body }}</p>
+      <!-- Loading State -->
+      <div v-if="loading" class="space-y-4 animate-pulse">
+        <!-- Post Skeleton -->
+        <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full mb-2"></div>
+        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full mb-4"></div>
 
-      <div v-if="user" class="mb-4">
-        <h3 class="text-lg font-semibold">User Information</h3>
-        <p><strong>Name:</strong> {{ user.name }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
+        <!-- User Information Skeleton -->
+        <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-1/3 mb-2"></div>
+        <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-2/3 mb-4"></div>
+
+        <!-- Comments Skeleton -->
+        <div class="h-5 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-2"></div>
+        <div class="space-y-2">
+          <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
+          <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-5/6"></div>
+        </div>
       </div>
 
-      <div v-if="comments.length">
-        <h3 class="text-lg font-semibold">Comments</h3>
-        <ul>
-          <li v-for="comment in comments" :key="comment.id" class="mb-2">
-            <p class="font-semibold">{{ comment.name }}</p>
-            <p>{{ comment.body }}</p>
-          </li>
-        </ul>
+      <!-- Error State -->
+      <div v-else-if="error" class="text-red-500 text-center">
+        <p>An error occurred while fetching the post details. Please try again later.</p>
       </div>
 
-      <button
-        @click="close"
-        class="mt-4 px-4 py-2 rounded bg-bright-blue text-white hover:bg-blue-600 focus:outline-none"
-      >
-        Close
-      </button>
+      <!-- Content -->
+      <template v-else>
+        <!-- Post Section -->
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold mb-2">{{ post.title }}</h2>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            By <strong>{{ user.name + ' ' }}</strong>
+            <a :href="'mailto:' + user.email" class="text-bright-blue hover:underline">{{
+              user.email
+            }}</a>
+          </p>
+          <p class="mb-4">{{ post.body }}</p>
+        </div>
+
+        <!-- Comments Section -->
+        <div v-if="comments.length" class="mb-6">
+          <h3 class="text-xl font-semibold mb-4">Comments ({{ comments.length }})</h3>
+          <ul class="space-y-4">
+            <li
+              v-for="comment in comments"
+              :key="comment.id"
+              class="p-4 bg-gray-100 dark:bg-gray-800 rounded shadow"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="font-semibold">{{ comment.name }}</span>
+                <a
+                  :href="'mailto:' + comment.email"
+                  class="text-sm text-bright-blue hover:underline"
+                  >{{ comment.email }}</a
+                >
+              </div>
+              <p>{{ comment.body }}</p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Close Button -->
+        <div class="flex justify-end">
+          <button
+            @click="close"
+            class="mt-4 px-6 py-2 rounded bg-bright-blue text-white hover:bg-blue-600 focus:outline-none transition"
+          >
+            Close
+          </button>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { apiService } from '../services/api';
+import { usePostDetails } from '../composables/usePostDetails';
 
 const props = defineProps({
   post: {
@@ -45,36 +92,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
-
-const user = ref(null);
-const comments = ref([]);
-
-async function fetchUser() {
-  try {
-    user.value = await apiService.fetchUser(props.post.userId);
-  } catch (error) {
-    console.error('Error fetching user:', error);
-  }
-}
-
-async function fetchComments() {
-  try {
-    comments.value = await apiService.fetchComments(props.post.id);
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-  }
-}
-
-watch(
-  () => props.post,
-  (newPost) => {
-    if (newPost) {
-      fetchUser();
-      fetchComments();
-    }
-  },
-  { immediate: true }
-);
+const { user, comments, loading, error } = usePostDetails(props.post);
 
 function close() {
   emit('close');
