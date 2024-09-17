@@ -1,24 +1,40 @@
 <template>
   <div
-    :style="{ width: sidebarWidth }"
-    class="h-full flex flex-col pt-6 bg-light-gray dark:bg-dark-gray transition-width duration-300 shadow"
+    v-if="isSidebarOpen"
+    class="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden"
+    @click="closeSidebar"
+  ></div>
+
+  <div
+    :class="[
+      'fixed z-40 inset-y-0 left-0 overflow-y-auto md:transition-width duration-300 transform bg-light-gray dark:bg-dark-gray shadow-right',
+      isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
+      'md:translate-x-0 md:static md:inset-0',
+      isCollapsed ? 'w-20' : 'w-64',
+    ]"
   >
-    <div class="flex items-center justify-between px-4">
+    <div class="flex items-center justify-between px-4 py-4">
       <span v-if="!isCollapsed" class="text-charcoal dark:text-soft-gray text-xl font-semibold"
         >My App</span
       >
-      <button @click="toggleSidebar" class="text-charcoal dark:text-soft-gray focus:outline-none">
-        <span v-if="isCollapsed">Expand</span>
-        <span v-else>Collapse</span>
+      <button
+        @click="closeSidebar"
+        class="text-charcoal dark:text-soft-gray focus:outline-none md:hidden"
+      >
+        Close
+      </button>
+      <button
+        @click="toggleCollapse"
+        class="text-charcoal dark:text-soft-gray focus:outline-none hidden md:block"
+      >
+        {{ isCollapsed ? 'Expand' : 'Collapse' }}
       </button>
     </div>
-    <nav class="flex-1 mt-6 px-3 space-y-2">
+    <nav class="flex-1 px-3 space-y-2">
       <router-link
         to="/"
-        :class="[
-          'flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray',
-          $route.path === '/' ? 'bg-soft-gray dark:bg-medium-gray' : '',
-        ]"
+        class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
+        :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/' }"
       >
         <span v-if="!isCollapsed" class="ml-3">Home</span>
       </router-link>
@@ -27,12 +43,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useSidebarState } from '../composables/useSidebarState';
 import { useRoute } from 'vue-router';
+import { useSidebarState } from '../composables/useSidebarState';
 
-const { isCollapsed, toggleSidebar } = useSidebarState();
 const $route = useRoute();
-
-const sidebarWidth = computed(() => (isCollapsed.value ? '80px' : '256px'));
+const { isCollapsed, toggleCollapse, isSidebarOpen, closeSidebar } = useSidebarState();
 </script>

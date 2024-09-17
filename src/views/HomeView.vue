@@ -4,7 +4,7 @@
     <div class="flex flex-col flex-1">
       <SiteHeader />
       <div class="relative flex-1 overflow-hidden">
-        <div class="absolute inset-0 p-6">
+        <div class="absolute inset-0 p-6 overflow-y-auto">
           <PostsTable />
         </div>
       </div>
