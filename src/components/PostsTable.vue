@@ -1,17 +1,17 @@
 <template>
-  <div class="overflow-y-auto h-full">
+  <div class="overflow-y-auto h-full scrollbar-custom">
     <div v-if="isLoading" class="text-center">Loading posts...</div>
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
-    <table class="min-w-full leading-normal">
-      <thead>
+    <table class="min-w-full leading-normal border-separate" style="border-spacing: 0">
+      <thead class="sticky top-0 bg-off-white dark:bg-soft-black">
         <tr>
           <th
-            class="px-5 py-3 border-b-2 text-left text-sm font-semibold uppercase tracking-wider bg-off-white dark:bg-soft-black text-charcoal dark:text-soft-gray border-soft-gray dark:border-medium-gray"
+            class="w-1/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
           >
             Title
           </th>
           <th
-            class="px-5 py-3 border-b-2 text-left text-sm font-semibold uppercase tracking-wider bg-off-white dark:bg-soft-black text-charcoal dark:text-soft-gray border-soft-gray dark:border-medium-gray"
+            class="w-2/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
           >
             Body
           </th>
@@ -19,11 +19,16 @@
       </thead>
       <tbody>
         <tr
-          v-for="post in posts"
+          v-for="(post, index) in posts"
           :key="post.id"
-          class="border-b bg-off-white dark:bg-soft-black border-soft-gray dark:border-medium-gray"
+          :class="[
+            'border-b border-soft-gray dark:border-medium-gray',
+            index % 2 === 0
+              ? 'bg-alternate-light dark:bg-alternate-dark'
+              : 'bg-off-white dark:bg-soft-black',
+          ]"
         >
-          <td class="px-5 py-5">
+          <td class="w-1/3 px-5 py-5">
             <a
               href="#"
               @click.prevent="openPostModal(post)"
@@ -32,16 +37,18 @@
               {{ post.title }}
             </a>
           </td>
-          <td class="px-5 py-5">
-            <div>
-              <span v-if="expandedPosts.has(post.id)">
-                {{ post.body }}
-                <button @click="toggleReadMore(post.id)" :class="buttonClasses">Read less</button>
+          <td class="w-2/3 px-5 py-5">
+            <div class="flex items-start">
+              <span class="flex-grow">
+                {{ expandedPosts.has(post.id) ? post.body : truncateText(post.body, 100) }}
               </span>
-              <span v-else>
-                {{ truncateText(post.body, 100) }}
-                <button @click="toggleReadMore(post.id)" :class="buttonClasses">Read more</button>
-              </span>
+              <button
+                v-if="!expandedPosts.has(post.id)"
+                @click="expandPost(post.id)"
+                :class="buttonClasses"
+              >
+                Read more
+              </button>
             </div>
           </td>
         </tr>
@@ -63,12 +70,8 @@ const expandedPosts = ref(new Set());
 const showModal = ref(false);
 const selectedPost = ref(null);
 
-function toggleReadMore(postId) {
-  if (expandedPosts.value.has(postId)) {
-    expandedPosts.value.delete(postId);
-  } else {
-    expandedPosts.value.add(postId);
-  }
+function expandPost(postId) {
+  expandedPosts.value.add(postId);
 }
 
 function truncateText(text, length) {

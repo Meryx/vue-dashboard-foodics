@@ -15,6 +15,8 @@ export default {
         'medium-gray': '#3A3A3A',
         'site-light': '#EDEDED',
         'site-dark': '#1A1A1A',
+        'alternate-light': '#FFFFFF', // Slightly different from 'off-white'
+        'alternate-dark': '#2A2A2A', // Slightly different from 'soft-black'
       },
       transitionProperty: {
         width: 'width',
