@@ -1,6 +1,6 @@
 <template>
   <header
-    class="flex items-center justify-between px-4 py-2 bg-white dark:bg-very-dark-gray shadow"
+    class="z-10 flex items-center justify-between px-4 py-2 bg-white dark:bg-very-dark-gray shadow-md"
   >
     <div class="flex items-center">
       <button
