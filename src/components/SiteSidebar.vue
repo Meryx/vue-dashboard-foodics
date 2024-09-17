@@ -13,21 +13,24 @@
       isCollapsed ? 'w-20' : 'w-64',
     ]"
   >
-    <div class="flex items-center justify-between px-4 py-4">
+    <div
+      :class="['flex items-center px-4 py-4', isCollapsed ? 'justify-center' : 'justify-between']"
+    >
       <span v-if="!isCollapsed" class="text-charcoal dark:text-soft-gray text-xl font-semibold"
-        >My App</span
+        >Foodics</span
       >
       <button
         @click="closeSidebar"
         class="text-charcoal dark:text-soft-gray focus:outline-none md:hidden"
       >
-        Close
+        <ChevronDoubleLeftIcon v-if="!isCollapsed" class="h-6 w-6" />
       </button>
       <button
         @click="toggleCollapse"
         class="text-charcoal dark:text-soft-gray focus:outline-none hidden md:block"
       >
-        {{ isCollapsed ? 'Expand' : 'Collapse' }}
+        <ChevronDoubleLeftIcon v-if="!isCollapsed" class="h-6 w-6" />
+        <ChevronDoubleRightIcon v-else class="h-6 w-6" />
       </button>
     </div>
     <nav class="flex-1 px-3 space-y-2">
@@ -36,6 +39,8 @@
         class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
         :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/' }"
       >
+        <HomeIcon class="h-6 w-6" />
+
         <span v-if="!isCollapsed" class="ml-3">Home</span>
       </router-link>
     </nav>
@@ -45,6 +50,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { useSidebarState } from '../composables/useSidebarState';
+import { HomeIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/vue/24/solid';
 
 const $route = useRoute();
 const { isCollapsed, toggleCollapse, isSidebarOpen, closeSidebar } = useSidebarState();
