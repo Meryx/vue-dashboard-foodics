@@ -1,5 +1,8 @@
 <template>
-  <div class="h-full scrollbar-custom overflow-y-auto overflow-hidden rounded-md">
+  <div
+    ref="mobilePostsTableScroll"
+    class="h-full scrollbar-custom overflow-y-auto overflow-hidden rounded-md md:flex md:flex-col"
+  >
     <div v-if="isLoading">
       <!-- Skeleton Loader -->
       <div class="animate-pulse">
@@ -68,73 +71,82 @@
       </div>
 
       <!-- Desktop View -->
-      <table
-        class="min-w-full leading-normal border-separate hidden md:table table-fixed w-full"
-        style="border-spacing: 0"
+      <div
+        ref="postsTableScroll"
+        class="scrollbar-custom overflow-y-auto max-h-0 md:h-[80vh] md:max-h-[80vh]"
       >
-        <thead class="sticky top-0 bg-off-white dark:bg-soft-black">
-          <tr>
-            <th
-              class="w-1/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
+        <table
+          class="min-w-full leading-normal border-separate hidden md:table table-fixed w-full"
+          style="border-spacing: 0"
+        >
+          <thead class="sticky top-0 bg-off-white dark:bg-soft-black">
+            <tr>
+              <th
+                class="w-1/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
+              >
+                Title
+              </th>
+              <th
+                class="w-2/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
+              >
+                Body
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(post, index) in paginatedPosts"
+              :key="post.id"
+              :class="[
+                'border-b border-soft-gray dark:border-medium-gray',
+                index % 2 === 0
+                  ? 'bg-alternate-light dark:bg-alternate-dark'
+                  : 'bg-off-white dark:bg-soft-black',
+              ]"
             >
-              Title
-            </th>
-            <th
-              class="w-2/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
-            >
-              Body
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(post, index) in paginatedPosts"
-            :key="post.id"
-            :class="[
-              'border-b border-soft-gray dark:border-medium-gray',
-              index % 2 === 0
-                ? 'bg-alternate-light dark:bg-alternate-dark'
-                : 'bg-off-white dark:bg-soft-black',
-            ]"
-          >
-            <td :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-bl-md' : '']">
-              <div class="w-full overflow-hidden">
-                <a
-                  href="#"
-                  @click.prevent="openPostModal(post)"
-                  :class="[
-                    'hover:underline text-charcoal dark:text-soft-gray hover:text-bright-blue dark:hover:text-bright-blue block',
-                  ]"
-                >
-                  {{ post.title }}
-                </a>
-              </div>
-            </td>
-            <td :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-br-md' : '']">
-              <div class="w-full overflow-hidden">
-                <div class="flex items-start">
-                  <span
-                    class="flex-grow mr-2"
+              <td
+                :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-bl-md' : '']"
+              >
+                <div class="w-full overflow-hidden">
+                  <a
+                    href="#"
+                    @click.prevent="openPostModal(post)"
                     :class="[
-                      !expandedPosts.has(post.id) ? 'truncate' : 'whitespace-normal break-words',
+                      'hover:underline text-charcoal dark:text-soft-gray hover:text-bright-blue dark:hover:text-bright-blue block',
                     ]"
                   >
-                    {{ post.body }}
-                  </span>
-                  <button
-                    v-if="!expandedPosts.has(post.id)"
-                    @click.stop="expandPost(post.id)"
-                    :class="buttonClasses"
-                    class="whitespace-nowrap"
-                  >
-                    Read more
-                  </button>
+                    {{ post.title }}
+                  </a>
                 </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+              <td
+                :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-br-md' : '']"
+              >
+                <div class="w-full overflow-hidden">
+                  <div class="flex items-start">
+                    <span
+                      class="flex-grow mr-2"
+                      :class="[
+                        !expandedPosts.has(post.id) ? 'truncate' : 'whitespace-normal break-words',
+                      ]"
+                    >
+                      {{ post.body }}
+                    </span>
+                    <button
+                      v-if="!expandedPosts.has(post.id)"
+                      @click.stop="expandPost(post.id)"
+                      :class="buttonClasses"
+                      class="whitespace-nowrap"
+                    >
+                      Read more
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <!-- Pagination Controls -->
       <div class="flex justify-between items-center mt-4 px-4">
@@ -147,7 +159,12 @@
           <div class="flex items-center space-x-2">
             <!-- First Page Button -->
             <button
-              @click="goToFirstPage"
+              @click="
+                () => {
+                  goToFirstPage();
+                  resetScroll();
+                }
+              "
               :disabled="currentPage === 1"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
@@ -155,7 +172,12 @@
             </button>
             <!-- Previous Page Button -->
             <button
-              @click="prevPage"
+              @click="
+                () => {
+                  prevPage();
+                  resetScroll();
+                }
+              "
               :disabled="currentPage === 1"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
@@ -163,7 +185,12 @@
             </button>
             <!-- Next Page Button -->
             <button
-              @click="nextPage"
+              @click="
+                () => {
+                  nextPage();
+                  resetScroll();
+                }
+              "
               :disabled="currentPage === totalPages"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
@@ -171,7 +198,12 @@
             </button>
             <!-- Last Page Button -->
             <button
-              @click="goToLastPage"
+              @click="
+                () => {
+                  goToLastPage();
+                  resetScroll();
+                }
+              "
               :disabled="currentPage === totalPages"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
@@ -191,7 +223,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { usePosts } from '../composables/usePosts';
 import PostModal from './PostModal.vue';
 import {
@@ -208,6 +240,9 @@ const showModal = ref(false);
 const selectedPost = ref(null);
 
 const currentPage = ref(1);
+const postsTableScroll = ref(null);
+const mobilePostsTableScroll = ref(null);
+
 const itemsPerPage = 15;
 
 const totalPages = computed(() => Math.ceil(posts.value.length / itemsPerPage));
@@ -220,6 +255,17 @@ const paginatedPosts = computed(() => {
   const end = start + itemsPerPage;
   return posts.value.slice(start, end);
 });
+
+function resetScroll() {
+  nextTick(() => {
+    if (postsTableScroll.value) {
+      postsTableScroll.value.scrollTop = 0;
+    }
+    if (mobilePostsTableScroll.value) {
+      mobilePostsTableScroll.value.scrollTop = 0;
+    }
+  });
+}
 
 function nextPage() {
   if (currentPage.value < totalPages.value) {
