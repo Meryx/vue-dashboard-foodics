@@ -2,7 +2,42 @@
   <div class="overflow-y-auto h-full scrollbar-custom">
     <div v-if="isLoading" class="text-center">Loading posts...</div>
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
-    <table class="min-w-full leading-normal border-separate" style="border-spacing: 0">
+
+    <div class="md:hidden">
+      <div
+        v-for="(post, index) in posts"
+        :key="post.id"
+        @click="openPostModal(post)"
+        :class="[
+          'p-4 border-b border-soft-gray dark:border-medium-gray cursor-pointer',
+          index % 2 === 0
+            ? 'bg-off-white dark:bg-soft-black'
+            : 'bg-alternate-light dark:bg-alternate-dark',
+        ]"
+      >
+        <h2 class="text-lg font-semibold text-charcoal dark:text-soft-gray">
+          {{ post.title }}
+        </h2>
+        <div class="mt-2 flex items-center">
+          <p class="text-charcoal dark:text-soft-gray flex-grow">
+            {{ expandedPosts.has(post.id) ? post.body : truncateText(post.body, 100) }}
+          </p>
+          <button
+            v-if="!expandedPosts.has(post.id)"
+            @click.stop="expandPost(post.id)"
+            :class="buttonClasses"
+            class="ml-2 whitespace-nowrap"
+          >
+            Read more
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <table
+      class="min-w-full leading-normal border-separate hidden md:table"
+      style="border-spacing: 0"
+    >
       <thead class="sticky top-0 bg-off-white dark:bg-soft-black">
         <tr>
           <th
@@ -24,8 +59,8 @@
           :class="[
             'border-b border-soft-gray dark:border-medium-gray',
             index % 2 === 0
-              ? 'bg-alternate-light dark:bg-alternate-dark'
-              : 'bg-off-white dark:bg-soft-black',
+              ? 'bg-off-white dark:bg-soft-black'
+              : 'bg-alternate-light dark:bg-alternate-dark',
           ]"
         >
           <td class="w-1/3 px-5 py-5">
@@ -38,14 +73,15 @@
             </a>
           </td>
           <td class="w-2/3 px-5 py-5">
-            <div class="flex items-start">
-              <span class="flex-grow">
+            <div class="flex items-center">
+              <span class="flex-grow mr-2">
                 {{ expandedPosts.has(post.id) ? post.body : truncateText(post.body, 100) }}
               </span>
               <button
                 v-if="!expandedPosts.has(post.id)"
                 @click="expandPost(post.id)"
                 :class="buttonClasses"
+                class="whitespace-nowrap"
               >
                 Read more
               </button>
@@ -89,6 +125,6 @@ function closeModal() {
 }
 
 const buttonClasses = [
-  'ml-2 text-bright-blue hover:underline focus:outline-none dark:text-bright-blue dark:hover:underline',
+  'text-bright-blue hover:underline focus:outline-none dark:text-bright-blue dark:hover:underline',
 ];
 </script>
