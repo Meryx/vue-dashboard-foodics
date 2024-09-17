@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{ width: sidebarWidth }"
-    class="h-full flex flex-col pt-6 bg-light-gray dark:bg-dark-gray transition-width duration-300"
+    class="h-full flex flex-col pt-6 bg-light-gray dark:bg-dark-gray transition-width duration-300 shadow"
   >
     <div class="flex items-center justify-between px-4">
       <span v-if="!isCollapsed" class="text-charcoal dark:text-soft-gray text-xl font-semibold"
@@ -16,9 +16,7 @@
       <router-link
         to="/"
         :class="[
-          'flex items-center px-4 py-2 rounded-md',
-          'text-charcoal dark:text-soft-gray',
-          'hover:bg-soft-gray dark:hover:bg-medium-gray',
+          'flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray',
           $route.path === '/' ? 'bg-soft-gray dark:bg-medium-gray' : '',
         ]"
       >

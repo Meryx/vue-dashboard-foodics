@@ -1,10 +1,12 @@
 <template>
   <div class="flex h-screen overflow-hidden">
     <SiteSidebar />
-    <div :class="['flex flex-col flex-1']">
+    <div class="flex flex-col flex-1">
       <SiteHeader />
-      <div class="flex-1 overflow-y-auto">
-        <PostsTable />
+      <div class="relative flex-1 overflow-hidden">
+        <div class="absolute inset-0 p-6">
+          <PostsTable />
+        </div>
       </div>
     </div>
   </div>

@@ -44,6 +44,7 @@ This application utilizes Tailwind CSS's predefined colors.
 
 ### Light Mode
 
+- **Site Background**: `#EDEDED` (Very Light Gray)
 - **Sidebar**:
   - **Background**: `#F5F5F5` (Light Gray)
   - **Text**: `#333333` (Charcoal)
@@ -60,6 +61,7 @@ This application utilizes Tailwind CSS's predefined colors.
 
 ### Dark Mode
 
+- **Site Background**: `#1A1A1A` (Dark Charcoal)
 - **Sidebar**:
   - **Background**: `#2C2C2C` (Dark Gray)
   - **Text**: `#E0E0E0` (Light Gray)

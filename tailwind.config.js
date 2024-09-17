@@ -13,6 +13,8 @@ export default {
         'very-dark-gray': '#2A2A2A',
         'soft-black': '#1E1E1E',
         'medium-gray': '#3A3A3A',
+        'site-light': '#EDEDED',
+        'site-dark': '#1A1A1A',
       },
       transitionProperty: {
         width: 'width',

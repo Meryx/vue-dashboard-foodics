@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-y-auto h-full">
     <div v-if="isLoading" class="text-center">Loading posts...</div>
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
     <table class="min-w-full leading-normal">
