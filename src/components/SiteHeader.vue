@@ -11,9 +11,7 @@
       </button>
       <h1 class="text-xl font-semibold text-charcoal dark:text-soft-gray">Dashboard Title</h1>
     </div>
-    <div class="flex items-center space-x-4">
-      <DarkModeToggle />
-    </div>
+    <DarkModeToggle />
   </header>
 </template>
 
