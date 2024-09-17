@@ -151,7 +151,7 @@
               :disabled="currentPage === 1"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
-              «
+              <ChevronDoubleLeftIcon class="h-6 w-6" />
             </button>
             <!-- Previous Page Button -->
             <button
@@ -159,7 +159,7 @@
               :disabled="currentPage === 1"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
-              ‹
+              <ChevronLeftIcon class="h-6 w-6" />
             </button>
             <!-- Next Page Button -->
             <button
@@ -167,7 +167,7 @@
               :disabled="currentPage === totalPages"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
-              ›
+              <ChevronRightIcon class="h-6 w-6" />
             </button>
             <!-- Last Page Button -->
             <button
@@ -175,7 +175,7 @@
               :disabled="currentPage === totalPages"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
-              »
+              <ChevronDoubleRightIcon class="h-6 w-6" />
             </button>
           </div>
           <!-- Page Indicator -->
@@ -194,6 +194,12 @@
 import { ref, computed, watch } from 'vue';
 import { usePosts } from '../composables/usePosts';
 import PostModal from './PostModal.vue';
+import {
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from '@heroicons/vue/24/solid';
 
 const { posts, isLoading, error } = usePosts();
 
