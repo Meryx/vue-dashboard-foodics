@@ -5,7 +5,7 @@
 
     <!-- Modal content -->
     <div
-      class="md:rounded-md shadow-lg p-6 z-20 h-[60vh] w-[90vw] mx-auto bg-white dark:bg-soft-black text-charcoal dark:text-soft-gray overflow-auto max-h-screen md:max-h-[90vh] scrollbar-custom"
+      class="md:rounded-md shadow-lg p-6 z-20 h-[75vh] w-[90vw] mx-auto bg-white dark:bg-soft-black text-charcoal dark:text-soft-gray overflow-auto max-h-screen md:max-h-[90vh] scrollbar-custom"
     >
       <!-- Loading State -->
       <div v-if="loading" class="space-y-4 animate-pulse">
@@ -36,7 +36,7 @@
         <!-- Post Section -->
         <div class="mb-6">
           <h2 class="text-2xl font-bold mb-2">{{ post.title }}</h2>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-sm mb-4">
             By <strong>{{ user.name + ' ' }}</strong>
             <a :href="'mailto:' + user.email" class="text-bright-blue hover:underline">{{
               user.email
@@ -52,7 +52,7 @@
             <li
               v-for="comment in comments"
               :key="comment.id"
-              class="p-4 bg-gray-100 dark:bg-gray-800 rounded shadow"
+              class="p-4 bg-off-white dark:bg-alternate-dark rounded shadow"
             >
               <div class="flex justify-between items-center mb-2">
                 <span class="font-semibold">{{ comment.name }}</span>
