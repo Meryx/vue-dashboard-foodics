@@ -2,6 +2,7 @@
   <div
     ref="mobilePostsTableScroll"
     class="h-full scrollbar-custom overflow-y-auto overflow-hidden rounded-md md:flex md:flex-col"
+    @scroll="handleScroll"
   >
     <div v-if="isLoading">
       <!-- Skeleton Loader -->
@@ -38,10 +39,10 @@
     </div>
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
     <template v-else>
-      <!-- Mobile View -->
+      <!-- Mobile View with infinite scrolling -->
       <div class="md:hidden">
         <div
-          v-for="(post, index) in paginatedPosts"
+          v-for="(post, index) in scrolledPosts"
           :key="post.id"
           @click="openPostModal(post)"
           :class="[
@@ -67,6 +68,9 @@
               Read more
             </button>
           </div>
+        </div>
+        <div v-if="isLoadingMore" class="flex justify-center my-4">
+          <ArrowPathIcon class="h-6 w-6 animate-spin text-bright-blue" />
         </div>
       </div>
 
@@ -148,8 +152,8 @@
         </table>
       </div>
 
-      <!-- Pagination Controls -->
-      <div class="flex justify-between items-center mt-4 px-4">
+      <!-- Pagination Controls for Desktop -->
+      <div class="hidden md:flex justify-between items-center mt-4 px-4">
         <!-- Bottom Left: Showing x–y of z posts -->
         <div class="text-charcoal dark:text-soft-gray">
           {{ startItem }}–{{ endItem }} of {{ totalItems }}
@@ -223,7 +227,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { usePosts } from '../composables/usePosts';
 import PostModal from './PostModal.vue';
 import {
@@ -231,6 +235,7 @@ import {
   ChevronDoubleRightIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
+  ArrowPathIcon,
 } from '@heroicons/vue/24/solid';
 
 const { posts, isLoading, error } = usePosts();
@@ -238,6 +243,7 @@ const { posts, isLoading, error } = usePosts();
 const expandedPosts = ref(new Set());
 const showModal = ref(false);
 const selectedPost = ref(null);
+const isLoadingMore = ref(false);
 
 const currentPage = ref(1);
 const postsTableScroll = ref(null);
@@ -256,15 +262,39 @@ const paginatedPosts = computed(() => {
   return posts.value.slice(start, end);
 });
 
-function resetScroll() {
-  nextTick(() => {
-    if (postsTableScroll.value) {
-      postsTableScroll.value.scrollTop = 0;
-    }
-    if (mobilePostsTableScroll.value) {
-      mobilePostsTableScroll.value.scrollTop = 0;
-    }
+const scrolledPosts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return posts.value.slice(0, end);
+});
+
+function handleScroll() {
+  const scrollContainer = mobilePostsTableScroll.value;
+
+  if (!scrollContainer || isLoadingMore.value) return;
+
+  const threshold = 300;
+  const position = scrollContainer.scrollTop + scrollContainer.clientHeight;
+  const height = scrollContainer.scrollHeight;
+
+  if (position > height - threshold) {
+    loadMorePosts();
+  }
+}
+
+function fakeApiCall() {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), 1000); // Simulates a 1-second delay
   });
+}
+
+async function loadMorePosts() {
+  if (currentPage.value < totalPages.value && !isLoadingMore.value) {
+    isLoadingMore.value = true; // Set loading state
+    await fakeApiCall(); // Simulate an API call
+    currentPage.value += 1; // Load the next page
+    isLoadingMore.value = false; // Reset loading state
+  }
 }
 
 function nextPage() {
@@ -286,6 +316,11 @@ function goToFirstPage() {
     currentPage.value = 1;
     expandedPosts.value.clear();
   }
+}
+
+function resetScroll() {
+  postsTableScroll.value.scrollTop = 0;
+  mobilePostsTableScroll.value.scrollTop = 0;
 }
 
 function goToLastPage() {
