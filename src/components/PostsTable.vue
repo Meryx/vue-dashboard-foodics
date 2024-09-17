@@ -97,7 +97,7 @@
                 : 'bg-off-white dark:bg-soft-black',
             ]"
           >
-            <td class="px-5 py-3">
+            <td :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-bl-md' : '']">
               <div class="w-full overflow-hidden">
                 <a
                   href="#"
@@ -111,7 +111,7 @@
                 </a>
               </div>
             </td>
-            <td class="px-5 py-3">
+            <td :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-br-md' : '']">
               <div class="w-full overflow-hidden">
                 <div class="flex items-start">
                   <span
@@ -203,7 +203,7 @@ const showModal = ref(false);
 const selectedPost = ref(null);
 
 const currentPage = ref(1);
-const itemsPerPage = 50;
+const itemsPerPage = 15;
 
 const totalPages = computed(() => Math.ceil(posts.value.length / itemsPerPage));
 const totalItems = computed(() => posts.value.length);
