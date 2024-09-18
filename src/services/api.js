@@ -1,4 +1,4 @@
-const BASE_URL = 'https://jsonplaceholder.typicode.com';
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const apiService = {
   async fetchPosts() {

@@ -45,42 +45,23 @@
 
     <!-- Navigation Links -->
     <nav class="flex-1 px-3 space-y-2">
-      <!-- Overview Link -->
-      <RouterLink
-        to="/"
-        class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
-        :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/' }"
-      >
+      <NavLink to="/" label="Overview" :isCollapsed="isCollapsed">
         <HomeIcon class="h-6 w-6" />
-        <span v-if="!isCollapsed" class="ml-3">Overview</span>
-      </RouterLink>
+      </NavLink>
 
-      <!-- Posts Link -->
-      <RouterLink
-        to="/posts"
-        class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
-        :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/posts' }"
-      >
+      <NavLink to="/posts" label="Posts" :isCollapsed="isCollapsed">
         <ClipboardDocumentListIcon class="h-6 w-6" />
-        <span v-if="!isCollapsed" class="ml-3">Posts</span>
-      </RouterLink>
+      </NavLink>
 
-      <!-- Statistics Link -->
-      <RouterLink
-        to="/statistics"
-        class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
-        :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/statistics' }"
-      >
+      <NavLink to="/statistics" label="Statistics" :isCollapsed="isCollapsed">
         <ChartBarIcon class="h-6 w-6" />
-        <span v-if="!isCollapsed" class="ml-3">Statistics</span>
-      </RouterLink>
+      </NavLink>
     </nav>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { useRoute, RouterLink } from 'vue-router';
 import { useStore } from 'vuex';
 import {
   HomeIcon,
@@ -90,10 +71,9 @@ import {
   ClipboardDocumentListIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/solid';
+import NavLink from '@/components/NavLink.vue';
 
 const store = useStore();
-
-const $route = useRoute();
 
 const isCollapsed = computed(() => store.getters['ui/isCollapsed']);
 const isSidebarOpen = computed(() => store.getters['ui/isSidebarOpen']);

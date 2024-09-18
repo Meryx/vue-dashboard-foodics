@@ -11,7 +11,7 @@
     </button>
 
     <!-- Page Title -->
-    <h1 class="text-xl font-semibold text-charcoal dark:text-soft-gray">
+    <h1 class="text-4xl font-semibold text-charcoal dark:text-soft-gray">
       {{ pageTitle }}
     </h1>
 

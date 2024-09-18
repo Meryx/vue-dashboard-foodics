@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-screen md:p-4 overflow-y-auto">
     <!-- Search Bar -->
-    <div class="m-4 md:m-0 md:mb-4 relative">
+    <div class="m-4 md:m-0 md:mb-4 md:w-1/3 relative">
       <label for="search" class="sr-only">Filter titles</label>
       <input
         id="search"
@@ -54,190 +54,45 @@
       </div>
       <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
       <template v-else>
-        <!-- Mobile View with infinite scrolling -->
-        <div class="md:hidden">
-          <div
-            v-for="(post, index) in scrolledPosts"
-            :key="post.id"
-            @click="openPostModal(post)"
-            :class="[
-              'p-4 border-b border-soft-gray dark:border-medium-gray cursor-pointer',
-              index % 2 === 0
-                ? 'bg-off-white dark:bg-soft-black'
-                : 'bg-alternate-light dark:bg-alternate-dark',
-            ]"
-          >
-            <h2
-              class="text-lg font-semibold text-charcoal dark:text-soft-gray"
-              v-html="highlightMatch(post.title, searchQuery)"
-            ></h2>
-            <div class="mt-2 flex items-center">
-              <p class="text-charcoal dark:text-soft-gray flex-grow">
-                {{ expandedPosts.has(post.id) ? post.body : truncateText(post.body, 100) }}
-              </p>
-              <button
-                v-if="!expandedPosts.has(post.id)"
-                @click.stop="expandPost(post.id)"
-                :class="['ml-2', 'whitespace-nowrap', buttonClasses]"
-              >
-                Read more
-              </button>
-            </div>
-          </div>
-          <div v-if="isLoadingMore" class="flex justify-center my-4">
-            <ArrowPathIcon class="h-6 w-6 animate-spin text-bright-blue" />
-          </div>
-        </div>
+        <!-- Mobile View -->
+        <MobilePostsList
+          class="md:hidden"
+          :posts="scrolledPosts"
+          :expandedPosts="expandedPosts"
+          :searchQuery="searchQuery"
+          @expandPost="expandPost"
+          @openPostModal="openPostModal"
+          :isLoadingMore="isLoadingMore"
+        />
 
         <!-- Desktop View -->
-        <div
-          ref="postsTableScroll"
-          class="hidden md:block scrollbar-custom max-h-full overflow-y-auto"
-        >
-          <table
-            class="min-w-full leading-normal table-fixed w-full border-separate"
-            style="border-spacing: 0"
-          >
-            <thead class="sticky top-0 bg-off-white dark:bg-soft-black">
-              <tr>
-                <th
-                  class="w-1/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
-                >
-                  Title
-                </th>
-                <th
-                  class="px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray flex justify-between items-center"
-                >
-                  BODY
-                  <button
-                    @click="fetchData(true)"
-                    class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
-                  >
-                    <ArrowPathIcon class="h-6 w-6" />
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(post, index) in paginatedPosts"
-                :key="post.id"
-                :class="[
-                  'border-b border-soft-gray dark:border-medium-gray',
-                  index % 2 === 0
-                    ? 'bg-alternate-light dark:bg-alternate-dark'
-                    : 'bg-off-white dark:bg-soft-black',
-                ]"
-              >
-                <td
-                  :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-bl-md' : '']"
-                >
-                  <div class="w-full overflow-hidden">
-                    <a
-                      href="#"
-                      @click.prevent="openPostModal(post)"
-                      :class="[
-                        'hover:underline text-charcoal dark:text-soft-gray hover:text-bright-blue dark:hover:text-bright-blue block',
-                      ]"
-                      v-html="highlightMatch(post.title, searchQuery)"
-                    >
-                    </a>
-                  </div>
-                </td>
-                <td
-                  :class="['px-5 py-3', index === paginatedPosts.length - 1 ? 'rounded-br-md' : '']"
-                >
-                  <div class="w-full overflow-hidden">
-                    <div class="flex items-start">
-                      <span
-                        class="flex-grow mr-2"
-                        :class="[
-                          !expandedPosts.has(post.id)
-                            ? 'truncate'
-                            : 'whitespace-normal break-words',
-                        ]"
-                      >
-                        {{ post.body }}
-                      </span>
-                      <button
-                        v-if="!expandedPosts.has(post.id)"
-                        @click.stop="expandPost(post.id)"
-                        :class="['whitespace-nowrap', buttonClasses]"
-                      >
-                        Read more
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <DesktopPostsTable
+          class="hidden md:block"
+          :posts="paginatedPosts"
+          :expandedPosts="expandedPosts"
+          :searchQuery="searchQuery"
+          @expandPost="expandPost"
+          @openPostModal="openPostModal"
+          @refreshData="fetchData"
+        />
       </template>
     </div>
 
     <!-- Pagination Controls -->
-    <div class="mt-4 hidden md:block">
-      <div class="hidden md:flex justify-between items-center">
-        <!-- Bottom Left: Showing x–y of z posts -->
-        <div class="text-charcoal dark:text-soft-gray">
-          {{ startItem }}–{{ endItem }} of {{ totalItems }}
-        </div>
-        <!-- Bottom Right: Pagination Buttons -->
-        <div class="flex flex-col">
-          <div class="flex items-center space-x-2">
-            <!-- First Page Button -->
-            <button
-              @click="
-                goToFirstPage();
-                resetScroll();
-              "
-              :disabled="currentPage === 1"
-              class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
-            >
-              <ChevronDoubleLeftIcon class="h-6 w-6" />
-            </button>
-            <!-- Previous Page Button -->
-            <button
-              @click="
-                prevPage();
-                resetScroll();
-              "
-              :disabled="currentPage === 1"
-              class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
-            >
-              <ChevronLeftIcon class="h-6 w-6" />
-            </button>
-            <!-- Next Page Button -->
-            <button
-              @click="
-                nextPage();
-                resetScroll();
-              "
-              :disabled="currentPage === totalPages"
-              class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
-            >
-              <ChevronRightIcon class="h-6 w-6" />
-            </button>
-            <!-- Last Page Button -->
-            <button
-              @click="
-                goToLastPage();
-                resetScroll();
-              "
-              :disabled="currentPage === totalPages"
-              class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
-            >
-              <ChevronDoubleRightIcon class="h-6 w-6" />
-            </button>
-          </div>
-          <!-- Page Indicator -->
-          <div class="text-charcoal dark:text-soft-gray py-2">
-            Page {{ currentPage }} of {{ totalPages }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <PaginationControls
+      class="hidden md:block"
+      v-if="!isLoading && !error"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      :startItem="startItem"
+      :endItem="endItem"
+      :totalItems="totalItems"
+      @goToFirstPage="goToFirstPage"
+      @prevPage="prevPage"
+      @nextPage="nextPage"
+      @goToLastPage="goToLastPage"
+      @resetScroll="resetScroll"
+    />
 
     <!-- Post Modal -->
     <PostModal v-if="showModal" :post="selectedPost" @close="closeModal" />
@@ -248,14 +103,10 @@
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import PostModal from './PostModal.vue';
-import {
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  ArrowPathIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/vue/24/solid';
+import PaginationControls from './PaginationControls.vue';
+import DesktopPostsTable from './DesktopPostsTable.vue';
+import MobilePostsList from './MobilePostsList.vue';
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid';
 
 const store = useStore();
 
@@ -312,6 +163,10 @@ const handleScroll = () => {
   }
 };
 
+/*
+  A fake API call to simulate an async request. 
+  Used to demonstrate proper infinite scrolling on mobile.
+*/
 const fakeApiCall = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
 const loadMorePosts = async () => {
@@ -360,9 +215,6 @@ const expandPost = (postId) => {
   expandedPosts.value.add(postId);
 };
 
-const truncateText = (text, length) =>
-  text.length > length ? `${text.slice(0, length)}...` : text;
-
 const openPostModal = (post) => {
   selectedPost.value = post;
   showModal.value = true;
@@ -371,12 +223,6 @@ const openPostModal = (post) => {
 const closeModal = () => {
   showModal.value = false;
   selectedPost.value = null;
-};
-
-const highlightMatch = (text, search) => {
-  if (!search) return text;
-  const searchRegex = new RegExp(`(${search})`, 'gi');
-  return text.replace(searchRegex, '<strong class="font-bold">$1</strong>');
 };
 
 watch(posts, () => {
@@ -389,8 +235,4 @@ watch(searchQuery, () => {
   expandedPosts.value.clear();
   resetScroll();
 });
-
-const buttonClasses = [
-  'text-bright-blue hover:underline focus:outline-none dark:text-bright-blue dark:hover:underline',
-];
 </script>

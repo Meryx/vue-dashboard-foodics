@@ -123,8 +123,8 @@ watch(
           {
             label: 'Number of Posts',
             data: datasetData,
-            backgroundColor: 'rgba(59, 130, 246, 0.8)',
-            borderColor: 'rgba(59, 130, 246, 1)',
+            backgroundColor: '#3b82f7cc',
+            borderColor: '#3b82f7',
             borderWidth: 1,
           },
         ],

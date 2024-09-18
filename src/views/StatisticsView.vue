@@ -1,10 +1,14 @@
 <template>
   <MainLayout>
+    <!-- Main container with flex layout and background settings -->
     <div class="flex flex-col h-screen overflow-auto bg-site-lite dark:bg-site-dark">
+      <!-- Loading State: Display skeleton loaders and a spinner while data is being fetched -->
       <div v-if="isLoading" class="p-4 flex flex-col md:flex-row items-start gap-4">
+        <!-- Skeleton loader for posts and comments summary -->
         <div
           class="bg-alternate-light dark:bg-soft-black shadow rounded p-6 md:h-80 w-full md:w-1/2 flex flex-col gap-4"
         >
+          <!-- Skeleton lines for loading effect -->
           <div class="flex flex-col items-start">
             <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-2 w-32"></div>
             <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded animate-pulse w-24"></div>
@@ -14,6 +18,8 @@
             <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded animate-pulse w-24"></div>
           </div>
         </div>
+
+        <!-- Spinner icon indicating loading -->
         <div
           class="bg-alternate-light dark:bg-soft-black shadow rounded p-4 flex-1 w-full md:w-1/2 h-80"
         >
@@ -23,12 +29,16 @@
         </div>
       </div>
 
+      <!-- Error State: Display error message if there's an issue fetching data -->
       <div v-else-if="error" class="p-4 text-red-500 text-center">
         {{ error }}
       </div>
 
+      <!-- Loaded State: Display fetched data -->
       <div v-else>
+        <!-- Summary Cards: Total Posts and Total Comments -->
         <div class="p-4 flex flex-col md:flex-row items-start gap-4">
+          <!-- Total Posts Card -->
           <div
             class="bg-alternate-light dark:bg-soft-black shadow rounded p-6 md:h-80 w-full md:w-1/2 flex flex-col gap-4"
           >
@@ -40,6 +50,7 @@
                 {{ totalPosts }}
               </p>
             </div>
+            <!-- Total Comments Card -->
             <div class="flex flex-col items-start">
               <h3 class="text-lg font-semibold mb-2 text-charcoal dark:text-soft-gray">
                 Total Comments
@@ -49,6 +60,8 @@
               </p>
             </div>
           </div>
+
+          <!-- Comments Chart -->
           <div
             class="bg-alternate-light dark:bg-soft-black shadow rounded p-4 flex-1 w-full md:w-1/2 h-80"
           >
@@ -58,8 +71,10 @@
           </div>
         </div>
 
+        <!-- Insights Section: Detailed statistics about posts -->
         <div class="p-4 flex-1">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Longest Post Insight -->
             <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
               <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
                 Longest Post
@@ -71,6 +86,8 @@
                 {{ longestPostLength }} characters
               </p>
             </div>
+
+            <!-- Shortest Post Insight -->
             <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
               <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
                 Shortest Post
@@ -82,24 +99,32 @@
                 {{ shortestPostLength }} characters
               </p>
             </div>
+
+            <!-- Average Length Insight -->
             <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
               <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
                 Average Length
               </h3>
               <p class="text-charcoal dark:text-soft-gray">{{ insights.average }} characters</p>
             </div>
+
+            <!-- Median Length Insight -->
             <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
               <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
                 Median Length
               </h3>
               <p class="text-charcoal dark:text-soft-gray">{{ insights.median }} characters</p>
             </div>
+
+            <!-- Minimum Length Insight -->
             <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
               <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
                 Minimum Length
               </h3>
               <p class="text-charcoal dark:text-soft-gray">{{ insights.min }} characters</p>
             </div>
+
+            <!-- Maximum Length Insight -->
             <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
               <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
                 Maximum Length
@@ -135,6 +160,11 @@ const error = computed(() => store.getters['ui/error']);
 
 const postLengths = computed(() => posts.value.map((post) => post.body.length));
 
+/**
+ * Calculate various insights based on post lengths.
+ * @param {number[]} lengths - Array of post lengths.
+ * @returns {Object} - An object containing min, max, average, median, and totalPosts.
+ */
 const calculateInsights = (lengths) => {
   const sortedLengths = [...lengths].sort((a, b) => a - b);
   const total = lengths.reduce((sum, len) => sum + len, 0);

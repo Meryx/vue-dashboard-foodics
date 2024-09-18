@@ -1,9 +1,9 @@
 <template>
   <div class="fixed inset-0 flex items-center justify-center z-50">
-    <!-- Background overlay -->
+    <!-- Background Overlay -->
     <div class="absolute inset-0 bg-black opacity-50" @click="close"></div>
 
-    <!-- Modal content -->
+    <!-- Modal Content -->
     <div
       class="md:rounded-md shadow-lg p-6 z-20 h-[75vh] w-[90vw] mx-auto bg-white dark:bg-soft-black text-charcoal dark:text-soft-gray overflow-auto max-h-screen md:max-h-[90vh] scrollbar-custom"
     >
@@ -28,19 +28,19 @@
 
       <!-- Error State -->
       <div v-else-if="error" class="text-red-500 text-center">
-        <p>An error occurred while fetching the post details. Please try again later.</p>
+        An error occurred while fetching the post details. Please try again later.
       </div>
 
       <!-- Content -->
-      <template v-else>
+      <div v-else>
         <!-- Post Section -->
         <div class="mb-6">
           <h2 class="text-2xl font-bold mb-2">{{ post.title }}</h2>
           <p class="text-sm mb-4">
             By <strong>{{ user.name + ' ' }}</strong>
-            <a :href="'mailto:' + user.email" class="text-bright-blue hover:underline">{{
-              user.email
-            }}</a>
+            <a :href="'mailto:' + user.email" class="text-bright-blue hover:underline">
+              {{ user.email }}
+            </a>
           </p>
           <p class="mb-4">{{ post.body }}</p>
         </div>
@@ -59,8 +59,9 @@
                 <a
                   :href="'mailto:' + comment.email"
                   class="text-sm text-bright-blue hover:underline"
-                  >{{ comment.email }}</a
                 >
+                  {{ comment.email }}
+                </a>
               </div>
               <p>{{ comment.body }}</p>
             </li>
@@ -76,7 +77,7 @@
             Close
           </button>
         </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -95,14 +96,12 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 
 const store = useStore();
-
 const { id: postId, userId } = props.post;
 
 const close = () => {
   emit('close');
 };
 
-store.dispatch('posts/fetchPosts');
 store.dispatch('users/fetchUser', userId);
 store.dispatch('comments/fetchComments', postId);
 

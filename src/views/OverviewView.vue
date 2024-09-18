@@ -1,9 +1,19 @@
 <template>
   <MainLayout>
     <div class="p-6 bg-site-lite dark:bg-site-dark text-charcoal dark:text-soft-gray overflow-auto">
-      <!-- Header Section with Vue.js Logo -->
       <section class="flex flex-col items-center mb-8">
-        <img src="https://vuejs.org/images/logo.png" alt="Vue.js Logo" class="h-24 w-24 mb-4" />
+        <!-- Placeholder for the logo while it loads -->
+        <div
+          v-if="!logoLoaded"
+          class="h-24 w-24 mb-4 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-full"
+        ></div>
+        <img
+          v-show="logoLoaded"
+          :src="logoSrc"
+          alt="Vue.js Logo"
+          class="h-24 w-24 mb-4"
+          @load="onLogoLoad"
+        />
         <h1 class="text-4xl font-bold">Project Overview</h1>
       </section>
 
@@ -11,9 +21,9 @@
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">About the Project</h2>
         <p class="text-base leading-relaxed">
-          This dashboard application is designed to provide insights into posts and comments data
-          fetched from a public API. It offers functionalities such as viewing, searching, and
-          analyzing data with interactive charts and statistics.
+          This dashboard application provides insights into posts and comments data fetched from a
+          public API. It offers functionalities such as viewing, searching, and analyzing data with
+          interactive charts and statistics.
         </p>
       </section>
 
@@ -31,8 +41,11 @@
               between pages.
             </li>
             <li>
-              <strong>Tailwind CSS:</strong> A utility-first CSS framework for styling components
-              efficiently.
+              <strong>Vuex:</strong> State management pattern + library for Vue.js applications.
+            </li>
+            <li>
+              <strong>Chart.js:</strong> Simple yet flexible JavaScript charting for designers &
+              developers.
             </li>
           </ul>
           <ul class="list-disc list-inside space-y-2">
@@ -48,6 +61,10 @@
               <strong>JSONPlaceholder API:</strong> A free online REST API used for fetching posts,
               comments, and user data.
             </li>
+            <li>
+              <strong>Tailwind CSS:</strong> A utility-first CSS framework for styling components
+              efficiently.
+            </li>
           </ul>
         </div>
       </section>
@@ -56,42 +73,41 @@
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Key Features</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-6">
-            <ClipboardDocumentListIcon class="h-8 w-8 text-bright-blue mb-4" />
-            <h3 class="text-xl font-semibold mb-2">Posts Table</h3>
-            <p>
-              View and search through a comprehensive list of posts with infinite scrolling and
-              pagination.
-            </p>
-          </div>
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-6">
-            <ChartBarIcon class="h-8 w-8 text-bright-blue mb-4" />
-            <h3 class="text-xl font-semibold mb-2">Statistics Dashboard</h3>
-            <p>
-              Analyze data with total counts, longest/shortest posts, average lengths, and
-              interactive charts.
-            </p>
-          </div>
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-6">
-            <DevicePhoneMobileIcon class="h-8 w-8 text-bright-blue mb-4" />
-            <h3 class="text-xl font-semibold mb-2">Responsive Design</h3>
-            <p>Ensures optimal user experience across various devices and screen sizes.</p>
-          </div>
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-6">
-            <MoonIcon class="h-8 w-8 text-bright-blue mb-4" />
-            <h3 class="text-xl font-semibold mb-2">Dark Mode Support</h3>
-            <p>Toggle between light and dark themes for comfortable viewing.</p>
-          </div>
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-6">
-            <PuzzlePieceIcon class="h-8 w-8 text-bright-blue mb-4" />
-            <h3 class="text-xl font-semibold mb-2">Modular Components</h3>
-            <p>Reusable and maintainable components built with Vue's Composition API.</p>
-          </div>
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-6">
-            <BoltIcon class="h-8 w-8 text-bright-blue mb-4" />
-            <h3 class="text-xl font-semibold mb-2">Performance Optimized</h3>
-            <p>Efficient data fetching and state management ensure a smooth user experience.</p>
-          </div>
+          <FeatureCard
+            :icon="ClipboardDocumentListIcon"
+            title="Posts Table"
+            description="View and search through a comprehensive list of posts with infinite scrolling and pagination."
+          />
+
+          <FeatureCard
+            :icon="ChartBarIcon"
+            title="Statistics Dashboard"
+            description="Analyze data with total counts, longest/shortest posts, average lengths, and interactive charts."
+          />
+
+          <FeatureCard
+            :icon="DevicePhoneMobileIcon"
+            title="Responsive Design"
+            description="Ensures optimal user experience across various devices and screen sizes."
+          />
+
+          <FeatureCard
+            :icon="MoonIcon"
+            title="Dark Mode Support"
+            description="Toggle between light and dark themes for comfortable viewing."
+          />
+
+          <FeatureCard
+            :icon="PuzzlePieceIcon"
+            title="Modular Components"
+            description="Reusable and maintainable components built with Vue's Composition API."
+          />
+
+          <FeatureCard
+            :icon="BoltIcon"
+            title="Performance Optimized"
+            description="Efficient data fetching and state management ensure a smooth user experience."
+          />
         </div>
       </section>
 
@@ -102,13 +118,13 @@
         <ol class="list-decimal list-inside space-y-2 mt-4">
           <li>
             Clone the repository:
-            <code class="bg-gray-200 dark:bg-gray-700 px-1 rounded"
-              >git clone https://github.com/Meryx/vue-dashboard-foodics.git</code
-            >
+            <code class="bg-gray-200 dark:bg-gray-700 px-1 rounded">
+              git clone https://github.com/Meryx/vue-dashboard-foodics.git
+            </code>
           </li>
           <li>
             Navigate to the project directory:
-            <code class="bg-gray-200 dark:bg-gray-700 px-1 rounded">vue-dashboard-foodics</code>
+            <code class="bg-gray-200 dark:bg-gray-700 px-1 rounded">cd vue-dashboard-foodics</code>
           </li>
           <li>
             Install dependencies:
@@ -125,7 +141,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import MainLayout from '@/layouts/MainLayout.vue';
+import FeatureCard from '@/components/FeatureCard.vue';
 import {
   ClipboardDocumentListIcon,
   ChartBarIcon,
@@ -134,4 +152,11 @@ import {
   PuzzlePieceIcon,
   BoltIcon,
 } from '@heroicons/vue/24/solid';
+
+const logoSrc = 'https://vuejs.org/images/logo.png';
+const logoLoaded = ref(false);
+
+const onLogoLoad = () => {
+  logoLoaded.value = true;
+};
 </script>
