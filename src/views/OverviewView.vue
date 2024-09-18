@@ -50,12 +50,8 @@
           </ul>
           <ul class="list-disc list-inside space-y-2">
             <li>
-              <strong>Heroicons:</strong> Provides a set of free MIT-licensed high-quality SVG icons
-              for interface design.
-            </li>
-            <li>
-              <strong>Composition API:</strong> Enhances code organization and reusability with
-              composable functions.
+              <strong>Heroicons:</strong> Beautiful hand-crafted SVG icons, by the makers of
+              Tailwind CSS.
             </li>
             <li>
               <strong>JSONPlaceholder API:</strong> A free online REST API used for fetching posts,
