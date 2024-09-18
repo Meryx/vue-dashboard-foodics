@@ -13,6 +13,6 @@
 </template>
 
 <script setup>
-import MainLayout from '../layouts/MainLayout.vue';
+import MainLayout from '@/layouts/MainLayout.vue';
 import { RouterLink } from 'vue-router';
 </script>

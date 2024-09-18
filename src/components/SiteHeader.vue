@@ -71,7 +71,7 @@ import { ref, computed, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { Bars3Icon, MoonIcon, SunIcon } from '@heroicons/vue/24/solid';
-import avatarImage from '../assets/avatar.jpg';
+import avatarImage from '@/assets/avatar.jpg';
 
 const store = useStore();
 const route = useRoute();

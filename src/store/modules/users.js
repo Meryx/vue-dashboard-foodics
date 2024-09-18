@@ -1,4 +1,4 @@
-import { apiService } from '../../services/api';
+import { apiService } from '@/services/api';
 const state = () => ({
   users: {},
   isLoadingUser: false,

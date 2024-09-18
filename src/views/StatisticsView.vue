@@ -143,8 +143,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import MainLayout from '../layouts/MainLayout.vue';
-import CommentsChart from '../components/CommentsChart.vue';
+import MainLayout from '@/layouts/MainLayout.vue';
+import CommentsChart from '@/components/CommentsChart.vue';
 import { useStore } from 'vuex';
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 

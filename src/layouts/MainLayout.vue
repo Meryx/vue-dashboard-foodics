@@ -9,6 +9,6 @@
 </template>
 
 <script setup>
-import SiteSidebar from '../components/SiteSidebar.vue';
-import SiteHeader from '../components/SiteHeader.vue';
+import SiteSidebar from '@/components/SiteSidebar.vue';
+import SiteHeader from '@/components/SiteHeader.vue';
 </script>
