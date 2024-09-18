@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
+import OverviewView from '../views/OverviewView.vue';
+import PostsView from '../views/PostsView.vue';
 import StatisticsView from '../views/StatisticsView.vue';
 
 const router = createRouter({
@@ -7,13 +8,23 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'overview',
+      component: OverviewView,
+    },
+    {
+      path: '/posts',
+      name: 'posts',
+      component: PostsView,
     },
     {
       path: '/statistics',
       name: 'statistics',
       component: StatisticsView,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('../views/NotFoundView.vue'),
     },
   ],
 });
