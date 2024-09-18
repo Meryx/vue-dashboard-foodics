@@ -1,15 +1,10 @@
 <template>
-  <div class="flex h-screen overflow-hidden">
-    <SiteSidebar />
-    <div class="flex flex-col flex-1">
-      <SiteHeader />
-      <PostsTable />
-    </div>
-  </div>
+  <MainLayout>
+    <PostsTable />
+  </MainLayout>
 </template>
 
 <script setup>
-import SiteSidebar from '../components/SiteSidebar.vue';
-import SiteHeader from '../components/SiteHeader.vue';
+import MainLayout from '../layouts/MainLayout.vue';
 import PostsTable from '../components/PostsTable.vue';
 </script>

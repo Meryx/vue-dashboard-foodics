@@ -230,10 +230,6 @@
           </div>
         </div>
       </div>
-      <!-- Optional: Mobile Pagination Controls -->
-      <div class="flex md:hidden justify-center items-center mt-2">
-        <!-- Implement mobile-specific pagination if needed -->
-      </div>
     </div>
 
     <!-- Post Modal -->
@@ -345,6 +341,7 @@ function goToFirstPage() {
 
 function resetScroll() {
   postsTableScroll.value.scrollTop = 0;
+  mobilePostsTableScroll.value.scrollTop = 0;
 }
 
 function goToLastPage() {
@@ -374,9 +371,9 @@ function closeModal() {
 
 function highlightMatch(text, search) {
   if (!search) return text;
-  const searchRegex = new RegExp(`(${search})`, 'gi'); // Create a case-insensitive regex for the search term
+  const searchRegex = new RegExp(`(${search})`, 'gi');
   console.log(text.replace(searchRegex, '<strong class="font-bold">$1</strong>'));
-  return text.replace(searchRegex, '<strong class="font-bold">$1</strong>'); // Replace the match with bold HTML
+  return text.replace(searchRegex, '<strong class="font-bold">$1</strong>');
 }
 
 // Reset to page 1 when posts change
@@ -388,6 +385,7 @@ watch(posts, () => {
 watch(searchQuery, () => {
   currentPage.value = 1;
   expandedPosts.value.clear();
+  resetScroll();
 });
 
 const buttonClasses = [

@@ -27,7 +27,7 @@ export function usePostDetails(post) {
 
   async function fetchPostDetails() {
     loading.value = true;
-    await Promise.all([fetchUser(), fetchComments()]); // Fetch both user and comments in parallel
+    await Promise.all([fetchUser(), fetchComments()]);
     loading.value = false;
   }
 
