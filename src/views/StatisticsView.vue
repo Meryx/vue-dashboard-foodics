@@ -146,12 +146,11 @@ import { computed } from 'vue';
 import MainLayout from '../layouts/MainLayout.vue';
 import CommentsChart from '../components/CommentsChart.vue';
 import { usePostLengthInsights } from '../composables/usePostLengthInsights';
-import { usePosts } from '../composables/usePosts';
+import { usePostsWithComments } from '../composables/usePostsWithComments';
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 
+const { posts, comments, isLoading: isLoadingPosts } = usePostsWithComments();
 const { postLengths, insights, isLoading: isLoadingLengths } = usePostLengthInsights();
-
-const { posts, isLoading: isLoadingPosts } = usePosts();
 
 const isLoading = computed(() => isLoadingLengths.value || isLoadingPosts.value);
 
@@ -177,9 +176,9 @@ const shortestPostLength = computed(() => shortestPost.value?.body.length || 0);
 const totalPosts = computed(() => posts.value.length);
 
 const totalComments = computed(() => {
-  if (posts.value.length > 0) {
-    return posts.value.reduce((acc, post) => acc + (post.comments?.length || 0), 0);
+  if (comments.value.length > 0) {
+    return comments.value.length;
   }
-  return 0;
+  return null;
 });
 </script>

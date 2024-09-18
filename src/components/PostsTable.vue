@@ -1,13 +1,14 @@
 <template>
   <div class="flex flex-col h-screen md:p-4 overflow-y-auto">
     <!-- Search Bar -->
-    <div class="m-4 md:m-0 md:mb-4">
+    <div class="m-4 md:m-0 md:mb-4 relative">
       <input
         v-model="searchQuery"
         type="text"
         placeholder="Filter titles..."
-        class="w-full p-2 border border-soft-gray dark:border-medium-gray rounded-md bg-off-white dark:bg-soft-black text-charcoal dark:text-soft-gray placeholder-charcoal dark:placeholder-soft-gray focus:outline-none focus:border-bright-blue dark:focus:border-bright-blue"
+        class="w-full pl-10 p-2 border border-soft-gray dark:border-medium-gray rounded-md bg-off-white dark:bg-soft-black text-charcoal dark:text-soft-gray placeholder-charcoal dark:placeholder-soft-gray focus:outline-none focus:border-bright-blue dark:focus:border-bright-blue"
       />
+      <MagnifyingGlassIcon class="absolute left-3 top-3 h-5 w-5 text-gray-400" />
     </div>
 
     <!-- Table Container -->
@@ -247,6 +248,7 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
   ArrowPathIcon,
+  MagnifyingGlassIcon,
 } from '@heroicons/vue/24/solid';
 
 const { posts, isLoading, error } = usePosts();

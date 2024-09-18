@@ -46,40 +46,40 @@
     <!-- Navigation Links -->
     <nav class="flex-1 px-3 space-y-2">
       <!-- Overview Link -->
-      <router-link
+      <RouterLink
         to="/"
         class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
         :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/' }"
       >
         <HomeIcon class="h-6 w-6" aria-hidden="true" />
         <span v-if="!isCollapsed" class="ml-3">Overview</span>
-      </router-link>
+      </RouterLink>
 
       <!-- Posts Link -->
-      <router-link
+      <RouterLink
         to="/posts"
         class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
         :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/posts' }"
       >
         <ClipboardDocumentListIcon class="h-6 w-6" aria-hidden="true" />
         <span v-if="!isCollapsed" class="ml-3">Posts</span>
-      </router-link>
+      </RouterLink>
 
       <!-- Statistics Link -->
-      <router-link
+      <RouterLink
         to="/statistics"
         class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
         :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/statistics' }"
       >
         <ChartBarIcon class="h-6 w-6" aria-hidden="true" />
         <span v-if="!isCollapsed" class="ml-3">Statistics</span>
-      </router-link>
+      </RouterLink>
     </nav>
   </div>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
+import { useRoute, RouterLink } from 'vue-router';
 import { useSidebarState } from '../composables/useSidebarState';
 import {
   HomeIcon,
