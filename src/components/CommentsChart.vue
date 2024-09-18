@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-col">
     <h2 class="text-xl font-semibold mb-4 text-charcoal dark:text-soft-gray text-center">
-      Histogram of Post Lengths (n = {{ insights.totalPosts }})
+      Histogram of Post Lengths (n = {{ totalPosts }})
     </h2>
     <div class="flex-grow relative">
       <Bar
@@ -35,25 +35,19 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const store = useStore();
 
-store.dispatch('fetchPosts');
+store.dispatch('posts/fetchPosts');
 
-// Computed properties to access store state
-const posts = computed(() => store.state.posts);
-const isLoadingPosts = computed(() => store.getters.isLoadingPosts);
+const posts = computed(() => store.getters['posts/allPosts']);
+const isLoadingPosts = computed(() => store.getters['posts/isLoading']);
 
 const chartData = ref(null);
-const dataAvailable = ref(false);
 
-const chartOptions = ref({
+const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: {
-      display: false,
-    },
-    title: {
-      display: false,
-    },
+    legend: { display: false },
+    title: { display: false },
   },
   scales: {
     x: {
@@ -62,31 +56,21 @@ const chartOptions = ref({
       title: {
         display: true,
         text: 'Post Length',
-        font: {
-          size: 14,
-          weight: 'bold',
-        },
+        font: { size: 14, weight: 'bold' },
       },
       min: 100,
       max: 240,
       ticks: {
         stepSize: 20,
-        callback: function (value) {
-          return value;
-        },
+        callback: (value) => value,
       },
-      grid: {
-        display: false,
-      },
+      grid: { display: false },
     },
     y: {
       title: {
         display: true,
         text: 'Frequency',
-        font: {
-          size: 14,
-          weight: 'bold',
-        },
+        font: { size: 14, weight: 'bold' },
       },
       beginAtZero: true,
       grid: {
@@ -95,17 +79,12 @@ const chartOptions = ref({
       },
     },
   },
-
   elements: {
-    bar: {
-      borderWidth: 1,
-      borderRadius: 0,
-    },
+    bar: { borderWidth: 1, borderRadius: 0 },
   },
-
   barPercentage: 1.0,
   categoryPercentage: 1.0,
-});
+};
 
 const bins = [
   { start: 100, end: 119 },
@@ -118,49 +97,22 @@ const bins = [
 ];
 
 const binPostLengths = (lengths) => {
-  const binnedData = bins.map((bin) => ({
+  return bins.map((bin) => ({
     ...bin,
-    count: 0,
+    count: lengths.filter((length) => length >= bin.start && length <= bin.end).length,
     center: (bin.start + bin.end) / 2,
   }));
-
-  lengths.forEach((length) => {
-    for (const bin of binnedData) {
-      if (length >= bin.start && length <= bin.end) {
-        bin.count++;
-        break;
-      }
-    }
-  });
-
-  return binnedData;
 };
 
 const postLengths = computed(() => posts.value.map((post) => post.body.length));
 
-const insights = computed(() => {
-  const lengths = postLengths.value;
-  if (lengths.length === 0) return {};
-
-  const sortedLengths = [...lengths].sort((a, b) => a - b);
-  const total = lengths.reduce((sum, len) => sum + len, 0);
-  const min = sortedLengths[0];
-  const max = sortedLengths[sortedLengths.length - 1];
-  const average = total / lengths.length;
-  const median =
-    lengths.length % 2 === 0
-      ? (sortedLengths[lengths.length / 2 - 1] + sortedLengths[lengths.length / 2]) / 2
-      : sortedLengths[Math.floor(lengths.length / 2)];
-
-  return { min, max, average, median, totalPosts: lengths.length };
-});
+const totalPosts = computed(() => postLengths.value.length);
 
 watch(
-  () => postLengths.value,
+  postLengths,
   (newPostLengths) => {
     if (newPostLengths.length > 0) {
       const binnedData = binPostLengths(newPostLengths);
-
       const datasetData = binnedData.map((bin) => ({
         x: bin.center,
         y: bin.count,
@@ -177,22 +129,11 @@ watch(
           },
         ],
       };
-      dataAvailable.value = true;
-    } else {
-      chartData.value = null;
-      dataAvailable.value = false;
     }
   },
   { immediate: true }
 );
 
 const isLoading = computed(() => isLoadingPosts.value);
-const dataAvailableComputed = computed(() => !isLoading.value && postLengths.value.length > 0);
-watch(
-  () => {
-    dataAvailable.value = dataAvailableComputed.value;
-  },
-  () => {},
-  { immediate: true }
-);
+const dataAvailable = computed(() => !isLoading.value && postLengths.value.length > 0);
 </script>

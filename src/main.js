@@ -9,5 +9,6 @@ const app = createApp(App);
 
 app.use(router);
 app.use(store);
+store.dispatch('ui/initializeTheme');
 
 app.mount('#app');

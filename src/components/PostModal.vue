@@ -92,24 +92,24 @@ const props = defineProps({
   },
 });
 
-const { id: postId, userId } = props.post;
+const emit = defineEmits(['close']);
 
 const store = useStore();
 
-store.dispatch('fetchPosts');
-store.dispatch('fetchUser', userId);
-store.dispatch('fetchComments', postId);
+const { id: postId, userId } = props.post;
 
-const emit = defineEmits(['close']);
-
-const user = computed(() => store.getters.getUserById(userId));
-const comments = computed(() => store.getters.getCommentsByPostId(postId));
-const isLoading = computed(
-  () => store.getters.isLoadingUser || store.getters.isLoadingComments(postId)
-);
-const error = computed(() => store.getters.error);
-
-function close() {
+const close = () => {
   emit('close');
-}
+};
+
+store.dispatch('posts/fetchPosts');
+store.dispatch('users/fetchUser', userId);
+store.dispatch('comments/fetchComments', postId);
+
+const user = computed(() => store.getters['users/getUserById'](userId));
+const comments = computed(() => store.getters['comments/getCommentsByPostId'](postId));
+const isLoading = computed(
+  () => store.getters['users/isLoading'] || store.getters['comments/isLoadingComments'](postId)
+);
+const error = computed(() => store.getters['ui/error']);
 </script>

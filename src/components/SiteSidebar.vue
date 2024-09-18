@@ -95,14 +95,14 @@ const store = useStore();
 
 const $route = useRoute();
 
-const isCollapsed = computed(() => store.getters.isCollapsed);
-const isSidebarOpen = computed(() => store.getters.isSidebarOpen);
+const isCollapsed = computed(() => store.getters['ui/isCollapsed']);
+const isSidebarOpen = computed(() => store.getters['ui/isSidebarOpen']);
 
 const toggleCollapse = () => {
-  store.dispatch('toggleCollapse');
+  store.dispatch('ui/toggleCollapse');
 };
 
 const closeSidebar = () => {
-  store.dispatch('closeSidebar');
+  store.dispatch('ui/closeSidebar');
 };
 </script>

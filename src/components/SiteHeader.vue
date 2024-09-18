@@ -71,21 +71,19 @@ import { ref, computed, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { Bars3Icon, MoonIcon, SunIcon } from '@heroicons/vue/24/solid';
-
-import avatarImage from '../assets/avatar.jpg'; // Adjust the path as needed
+import avatarImage from '../assets/avatar.jpg';
 
 const store = useStore();
-
 const route = useRoute();
 
-const isDarkMode = computed(() => store.getters.isDarkMode);
+const isDarkMode = computed(() => store.getters['ui/isDarkMode']);
 
 const toggleSidebar = () => {
-  store.dispatch('toggleSidebar');
+  store.dispatch('ui/toggleSidebar');
 };
 
 const toggleTheme = () => {
-  store.dispatch('toggleTheme');
+  store.dispatch('ui/toggleTheme');
 };
 
 const routeNameToTitle = {
@@ -95,12 +93,9 @@ const routeNameToTitle = {
   NotFound: 'Page Not Found',
 };
 
-const pageTitle = computed(() => {
-  return routeNameToTitle[route.name] || 'Dashboard';
-});
+const pageTitle = computed(() => routeNameToTitle[route.name] || 'Dashboard');
 
 const avatar = ref(avatarImage);
-
 const isDropdownOpen = ref(false);
 
 const toggleDropdown = () => {
@@ -119,6 +114,4 @@ window.addEventListener('click', handleClickOutside);
 onBeforeUnmount(() => {
   window.removeEventListener('click', handleClickOutside);
 });
-
-store.dispatch('initializeTheme');
 </script>

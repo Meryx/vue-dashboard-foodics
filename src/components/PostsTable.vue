@@ -253,33 +253,28 @@ import {
 
 const store = useStore();
 
-store.dispatch('fetchPosts');
+store.dispatch('posts/fetchPosts');
 
-const posts = computed(() => store.state.posts);
-const isLoading = computed(() => store.state.isLoadingPosts);
-const error = computed(() => store.state.error);
+const posts = computed(() => store.getters['posts/allPosts']);
+const isLoading = computed(() => store.getters['posts/isLoading']);
+const error = computed(() => store.getters['ui/error']);
 
+const searchQuery = ref('');
+const currentPage = ref(1);
+const itemsPerPage = 15;
 const expandedPosts = ref(new Set());
 const showModal = ref(false);
 const selectedPost = ref(null);
 const isLoadingMore = ref(false);
-
-const currentPage = ref(1);
 const postsTableScroll = ref(null);
 const mobilePostsTableScroll = ref(null);
 
-// Search query variable
-const searchQuery = ref('');
-
-// Computed property to filter posts based on the search query
 const filteredPosts = computed(() => {
   return posts.value.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
-// Pagination and scrolling logic
-const itemsPerPage = 15;
 const totalPages = computed(() => Math.ceil(filteredPosts.value.length / itemsPerPage));
 const totalItems = computed(() => filteredPosts.value.length);
 const startItem = computed(() => (currentPage.value - 1) * itemsPerPage + 1);
@@ -292,99 +287,88 @@ const paginatedPosts = computed(() => {
 });
 
 const scrolledPosts = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
+  const end = currentPage.value * itemsPerPage;
   return filteredPosts.value.slice(0, end);
 });
 
-function handleScroll() {
+const handleScroll = () => {
   const scrollContainer = mobilePostsTableScroll.value;
-
   if (!scrollContainer || isLoadingMore.value) return;
-
   const threshold = 300;
   const position = scrollContainer.scrollTop + scrollContainer.clientHeight;
   const height = scrollContainer.scrollHeight;
-
   if (position > height - threshold) {
     loadMorePosts();
   }
-}
+};
 
-function fakeApiCall() {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(), 1000); // Simulates a 1-second delay
-  });
-}
+const fakeApiCall = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
-async function loadMorePosts() {
+const loadMorePosts = async () => {
   if (currentPage.value < totalPages.value && !isLoadingMore.value) {
-    isLoadingMore.value = true; // Set loading state
-    await fakeApiCall(); // Simulate an API call
-    currentPage.value += 1; // Load the next page
-    isLoadingMore.value = false; // Reset loading state
+    isLoadingMore.value = true;
+    await fakeApiCall();
+    currentPage.value += 1;
+    isLoadingMore.value = false;
   }
-}
+};
 
-function nextPage() {
+const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value += 1;
     expandedPosts.value.clear();
   }
-}
+};
 
-function prevPage() {
+const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value -= 1;
     expandedPosts.value.clear();
   }
-}
+};
 
-function goToFirstPage() {
+const goToFirstPage = () => {
   if (currentPage.value > 1) {
     currentPage.value = 1;
     expandedPosts.value.clear();
   }
-}
+};
 
-function resetScroll() {
-  postsTableScroll.value.scrollTop = 0;
-  mobilePostsTableScroll.value.scrollTop = 0;
-}
-
-function goToLastPage() {
+const goToLastPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value = totalPages.value;
     expandedPosts.value.clear();
   }
-}
+};
 
-function expandPost(postId) {
+const resetScroll = () => {
+  if (postsTableScroll.value) postsTableScroll.value.scrollTop = 0;
+  if (mobilePostsTableScroll.value) mobilePostsTableScroll.value.scrollTop = 0;
+};
+
+const expandPost = (postId) => {
   expandedPosts.value.add(postId);
-}
+};
 
-function truncateText(text, length) {
-  return text.length > length ? text.slice(0, length) + '...' : text;
-}
+const truncateText = (text, length) =>
+  text.length > length ? `${text.slice(0, length)}...` : text;
 
-function openPostModal(post) {
+const openPostModal = (post) => {
   selectedPost.value = post;
   showModal.value = true;
-}
+};
 
-function closeModal() {
+const closeModal = () => {
   showModal.value = false;
   selectedPost.value = null;
-}
+};
 
-function highlightMatch(text, search) {
+const highlightMatch = (text, search) => {
   if (!search) return text;
   const searchRegex = new RegExp(`(${search})`, 'gi');
-  console.log(text.replace(searchRegex, '<strong class="font-bold">$1</strong>'));
   return text.replace(searchRegex, '<strong class="font-bold">$1</strong>');
-}
+};
 
-// Reset to page 1 when posts change
 watch(posts, () => {
   currentPage.value = 1;
   expandedPosts.value.clear();

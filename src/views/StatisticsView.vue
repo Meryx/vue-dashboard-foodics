@@ -150,14 +150,14 @@ import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 
 const store = useStore();
 
-store.dispatch('fetchPosts');
-store.dispatch('fetchAllComments');
+store.dispatch('posts/fetchPosts');
+store.dispatch('comments/fetchAllComments');
 
-const posts = computed(() => store.state.posts);
-const isLoadingPosts = computed(() => store.state.isLoadingPosts);
+const posts = computed(() => store.getters['posts/allPosts']);
+const isLoadingPosts = computed(() => store.getters['posts/isLoadingPosts']);
 
-const comments = computed(() => store.state.allComments);
-const isLoadingComments = computed(() => store.state.isLoadingAllComments);
+const comments = computed(() => store.getters['comments/allComments']);
+const isLoadingComments = computed(() => store.getters['comments/isLoadingAllComments']);
 
 const postLengths = computed(() => posts.value.map((post) => post.body.length));
 
@@ -171,7 +171,6 @@ const calculateInsights = (lengths) => {
     lengths.length % 2 === 0
       ? (sortedLengths[lengths.length / 2 - 1] + sortedLengths[lengths.length / 2]) / 2
       : sortedLengths[Math.floor(lengths.length / 2)];
-
   return { min, max, average, median, totalPosts: lengths.length };
 };
 
@@ -180,27 +179,20 @@ const insights = computed(() => calculateInsights(postLengths.value));
 const isLoading = computed(() => isLoadingPosts.value || isLoadingComments.value);
 
 const longestPost = computed(() => {
-  if (posts.value.length > 0) {
-    const maxLength = Math.max(...postLengths.value);
-    return posts.value.find((post) => post.body.length === maxLength);
-  }
-  return null;
+  if (posts.value.length === 0) return null;
+  const maxLength = Math.max(...postLengths.value);
+  return posts.value.find((post) => post.body.length === maxLength);
 });
 
 const shortestPost = computed(() => {
-  if (posts.value.length > 0) {
-    const minLength = Math.min(...postLengths.value);
-    return posts.value.find((post) => post.body.length === minLength);
-  }
-  return null;
+  if (posts.value.length === 0) return null;
+  const minLength = Math.min(...postLengths.value);
+  return posts.value.find((post) => post.body.length === minLength);
 });
 
 const longestPostLength = computed(() => longestPost.value?.body.length || 0);
 const shortestPostLength = computed(() => shortestPost.value?.body.length || 0);
 
 const totalPosts = computed(() => posts.value.length);
-
-const totalComments = computed(() => {
-  return comments.value.length;
-});
+const totalComments = computed(() => comments.value.length);
 </script>
