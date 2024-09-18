@@ -29,8 +29,8 @@
           @click="toggleCollapse"
           class="text-charcoal dark:text-soft-gray focus:outline-none"
         >
-          <ChevronDoubleLeftIcon v-if="!isCollapsed" class="h-6 w-6" aria-hidden="true" />
-          <ChevronDoubleRightIcon v-else class="h-6 w-6" aria-hidden="true" />
+          <ChevronDoubleLeftIcon v-if="!isCollapsed" class="h-6 w-6" />
+          <ChevronDoubleRightIcon v-else class="h-6 w-6" />
         </button>
         <!-- Close Sidebar Button for Mobile -->
         <button
@@ -38,7 +38,7 @@
           @click="closeSidebar"
           class="ml-2 text-charcoal dark:text-soft-gray focus:outline-none md:hidden"
         >
-          <XMarkIcon class="h-6 w-6" aria-hidden="true" />
+          <XMarkIcon class="h-6 w-6" />
         </button>
       </div>
     </div>
@@ -51,7 +51,7 @@
         class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
         :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/' }"
       >
-        <HomeIcon class="h-6 w-6" aria-hidden="true" />
+        <HomeIcon class="h-6 w-6" />
         <span v-if="!isCollapsed" class="ml-3">Overview</span>
       </RouterLink>
 
@@ -61,7 +61,7 @@
         class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
         :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/posts' }"
       >
-        <ClipboardDocumentListIcon class="h-6 w-6" aria-hidden="true" />
+        <ClipboardDocumentListIcon class="h-6 w-6" />
         <span v-if="!isCollapsed" class="ml-3">Posts</span>
       </RouterLink>
 
@@ -71,7 +71,7 @@
         class="flex items-center px-4 py-2 rounded-md text-charcoal dark:text-soft-gray hover:bg-soft-gray dark:hover:bg-medium-gray"
         :class="{ 'bg-soft-gray dark:bg-medium-gray': $route.path === '/statistics' }"
       >
-        <ChartBarIcon class="h-6 w-6" aria-hidden="true" />
+        <ChartBarIcon class="h-6 w-6" />
         <span v-if="!isCollapsed" class="ml-3">Statistics</span>
       </RouterLink>
     </nav>
@@ -79,8 +79,9 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useRoute, RouterLink } from 'vue-router';
-import { useSidebarState } from '../composables/useSidebarState';
+import { useStore } from 'vuex';
 import {
   HomeIcon,
   ChevronDoubleLeftIcon,
@@ -90,6 +91,18 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/solid';
 
+const store = useStore();
+
 const $route = useRoute();
-const { isCollapsed, toggleCollapse, isSidebarOpen, closeSidebar } = useSidebarState();
+
+const isCollapsed = computed(() => store.getters.isCollapsed);
+const isSidebarOpen = computed(() => store.getters.isSidebarOpen);
+
+const toggleCollapse = () => {
+  store.dispatch('toggleCollapse');
+};
+
+const closeSidebar = () => {
+  store.dispatch('closeSidebar');
+};
 </script>

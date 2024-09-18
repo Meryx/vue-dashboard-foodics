@@ -145,14 +145,39 @@
 import { computed } from 'vue';
 import MainLayout from '../layouts/MainLayout.vue';
 import CommentsChart from '../components/CommentsChart.vue';
-import { usePostLengthInsights } from '../composables/usePostLengthInsights';
-import { usePostsWithComments } from '../composables/usePostsWithComments';
+import { useStore } from 'vuex';
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 
-const { posts, comments, isLoading: isLoadingPosts } = usePostsWithComments();
-const { postLengths, insights, isLoading: isLoadingLengths } = usePostLengthInsights();
+const store = useStore();
 
-const isLoading = computed(() => isLoadingLengths.value || isLoadingPosts.value);
+store.dispatch('fetchPosts');
+store.dispatch('fetchAllComments');
+
+const posts = computed(() => store.state.posts);
+const isLoadingPosts = computed(() => store.state.isLoadingPosts);
+
+const comments = computed(() => store.state.allComments);
+const isLoadingComments = computed(() => store.state.isLoadingAllComments);
+
+const postLengths = computed(() => posts.value.map((post) => post.body.length));
+
+const calculateInsights = (lengths) => {
+  const sortedLengths = [...lengths].sort((a, b) => a - b);
+  const total = lengths.reduce((sum, len) => sum + len, 0);
+  const min = sortedLengths[0];
+  const max = sortedLengths[sortedLengths.length - 1];
+  const average = total / lengths.length;
+  const median =
+    lengths.length % 2 === 0
+      ? (sortedLengths[lengths.length / 2 - 1] + sortedLengths[lengths.length / 2]) / 2
+      : sortedLengths[Math.floor(lengths.length / 2)];
+
+  return { min, max, average, median, totalPosts: lengths.length };
+};
+
+const insights = computed(() => calculateInsights(postLengths.value));
+
+const isLoading = computed(() => isLoadingPosts.value || isLoadingComments.value);
 
 const longestPost = computed(() => {
   if (posts.value.length > 0) {
@@ -176,9 +201,6 @@ const shortestPostLength = computed(() => shortestPost.value?.body.length || 0);
 const totalPosts = computed(() => posts.value.length);
 
 const totalComments = computed(() => {
-  if (comments.value.length > 0) {
-    return comments.value.length;
-  }
-  return null;
+  return comments.value.length;
 });
 </script>

@@ -2,7 +2,9 @@
   <div class="flex flex-col h-screen md:p-4 overflow-y-auto">
     <!-- Search Bar -->
     <div class="m-4 md:m-0 md:mb-4 relative">
+      <label for="search" class="sr-only">Filter titles</label>
       <input
+        id="search"
         v-model="searchQuery"
         type="text"
         placeholder="Filter titles..."
@@ -76,8 +78,7 @@
               <button
                 v-if="!expandedPosts.has(post.id)"
                 @click.stop="expandPost(post.id)"
-                :class="buttonClasses"
-                class="ml-2 whitespace-nowrap"
+                :class="['ml-2', 'whitespace-nowrap', buttonClasses]"
               >
                 Read more
               </button>
@@ -155,8 +156,7 @@
                       <button
                         v-if="!expandedPosts.has(post.id)"
                         @click.stop="expandPost(post.id)"
-                        :class="buttonClasses"
-                        class="whitespace-nowrap"
+                        :class="['whitespace-nowrap', buttonClasses]"
                       >
                         Read more
                       </button>
@@ -240,7 +240,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { usePosts } from '../composables/usePosts';
+import { useStore } from 'vuex';
 import PostModal from './PostModal.vue';
 import {
   ChevronDoubleLeftIcon,
@@ -251,7 +251,13 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/vue/24/solid';
 
-const { posts, isLoading, error } = usePosts();
+const store = useStore();
+
+store.dispatch('fetchPosts');
+
+const posts = computed(() => store.state.posts);
+const isLoading = computed(() => store.state.isLoadingPosts);
+const error = computed(() => store.state.error);
 
 const expandedPosts = ref(new Set());
 const showModal = ref(false);

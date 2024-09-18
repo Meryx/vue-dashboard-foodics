@@ -8,7 +8,7 @@
       class="md:rounded-md shadow-lg p-6 z-20 h-[75vh] w-[90vw] mx-auto bg-white dark:bg-soft-black text-charcoal dark:text-soft-gray overflow-auto max-h-screen md:max-h-[90vh] scrollbar-custom"
     >
       <!-- Loading State -->
-      <div v-if="loading" class="space-y-4 animate-pulse">
+      <div v-if="isLoading" class="space-y-4 animate-pulse">
         <!-- Post Skeleton -->
         <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
         <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full mb-2"></div>
@@ -82,7 +82,8 @@
 </template>
 
 <script setup>
-import { usePostDetails } from '../composables/usePostDetails';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 const props = defineProps({
   post: {
@@ -91,8 +92,22 @@ const props = defineProps({
   },
 });
 
+const { id: postId, userId } = props.post;
+
+const store = useStore();
+
+store.dispatch('fetchPosts');
+store.dispatch('fetchUser', userId);
+store.dispatch('fetchComments', postId);
+
 const emit = defineEmits(['close']);
-const { user, comments, loading, error } = usePostDetails(props.post);
+
+const user = computed(() => store.getters.getUserById(userId));
+const comments = computed(() => store.getters.getCommentsByPostId(postId));
+const isLoading = computed(
+  () => store.getters.isLoadingUser || store.getters.isLoadingComments(postId)
+);
+const error = computed(() => store.getters.error);
 
 function close() {
   emit('close');

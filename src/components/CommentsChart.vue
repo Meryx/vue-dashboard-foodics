@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-col">
     <h2 class="text-xl font-semibold mb-4 text-charcoal dark:text-soft-gray text-center">
-      Histogram of Post Lengths (n = {{ totalPosts }})
+      Histogram of Post Lengths (n = {{ insights.totalPosts }})
     </h2>
     <div class="flex-grow relative">
       <Bar
@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
-import { usePostLengthInsights } from '../composables/usePostLengthInsights';
+import { useStore } from 'vuex';
 import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -33,11 +33,17 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const { postLengths } = usePostLengthInsights();
+const store = useStore();
 
-const totalPosts = computed(() => postLengths.value.length);
+store.dispatch('fetchPosts');
+
+// Computed properties to access store state
+const posts = computed(() => store.state.posts);
+const isLoadingPosts = computed(() => store.getters.isLoadingPosts);
 
 const chartData = ref(null);
+const dataAvailable = ref(false);
+
 const chartOptions = ref({
   responsive: true,
   maintainAspectRatio: false,
@@ -101,8 +107,6 @@ const chartOptions = ref({
   categoryPercentage: 1.0,
 });
 
-const dataAvailable = ref(false);
-
 const bins = [
   { start: 100, end: 119 },
   { start: 120, end: 139 },
@@ -132,6 +136,25 @@ const binPostLengths = (lengths) => {
   return binnedData;
 };
 
+const postLengths = computed(() => posts.value.map((post) => post.body.length));
+
+const insights = computed(() => {
+  const lengths = postLengths.value;
+  if (lengths.length === 0) return {};
+
+  const sortedLengths = [...lengths].sort((a, b) => a - b);
+  const total = lengths.reduce((sum, len) => sum + len, 0);
+  const min = sortedLengths[0];
+  const max = sortedLengths[sortedLengths.length - 1];
+  const average = total / lengths.length;
+  const median =
+    lengths.length % 2 === 0
+      ? (sortedLengths[lengths.length / 2 - 1] + sortedLengths[lengths.length / 2]) / 2
+      : sortedLengths[Math.floor(lengths.length / 2)];
+
+  return { min, max, average, median, totalPosts: lengths.length };
+});
+
 watch(
   () => postLengths.value,
   (newPostLengths) => {
@@ -156,9 +179,20 @@ watch(
       };
       dataAvailable.value = true;
     } else {
+      chartData.value = null;
       dataAvailable.value = false;
     }
   },
+  { immediate: true }
+);
+
+const isLoading = computed(() => isLoadingPosts.value);
+const dataAvailableComputed = computed(() => !isLoading.value && postLengths.value.length > 0);
+watch(
+  () => {
+    dataAvailable.value = dataAvailableComputed.value;
+  },
+  () => {},
   { immediate: true }
 );
 </script>
