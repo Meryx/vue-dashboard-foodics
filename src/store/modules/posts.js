@@ -14,8 +14,8 @@ const mutations = {
 };
 
 const actions = {
-  async fetchPosts({ commit, state }) {
-    if (state.posts.length > 0) return;
+  async fetchPosts({ commit, state }, force) {
+    if (state.posts.length > 0 && !force) return;
     commit('SET_LOADING_POSTS', true);
     commit('ui/CLEAR_ERROR', null, { root: true });
     try {

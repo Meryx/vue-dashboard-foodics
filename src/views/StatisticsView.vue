@@ -1,139 +1,111 @@
 <template>
   <MainLayout>
-    <div
-      class="statistics-page flex flex-col h-screen overflow-auto bg-site-lite dark:bg-site-dark"
-    >
-      <!-- Chart and Total Pane Section -->
-      <div class="p-4 flex flex-col md:flex-row items-start gap-4">
-        <!-- Total Pane -->
+    <div class="flex flex-col h-screen overflow-auto bg-site-lite dark:bg-site-dark">
+      <div v-if="isLoading" class="p-4 flex flex-col md:flex-row items-start gap-4">
         <div
           class="bg-alternate-light dark:bg-soft-black shadow rounded p-6 md:h-80 w-full md:w-1/2 flex flex-col gap-4"
         >
-          <!-- Total Posts Card -->
           <div class="flex flex-col items-start">
-            <h3 class="text-lg font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Total Posts
-            </h3>
-            <p v-if="!isLoading" class="text-charcoal dark:text-soft-gray text-4xl font-bold">
-              {{ totalPosts }}
-            </p>
-            <div v-else class="w-full">
-              <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-            </div>
+            <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-2 w-32"></div>
+            <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded animate-pulse w-24"></div>
           </div>
-
-          <!-- Total Comments Card -->
           <div class="flex flex-col items-start">
-            <h3 class="text-lg font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Total Comments
-            </h3>
-            <p v-if="!isLoading" class="text-charcoal dark:text-soft-gray text-4xl font-bold">
-              {{ totalComments }}
-            </p>
-            <div v-else class="w-full">
-              <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-            </div>
+            <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-2 w-32"></div>
+            <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded animate-pulse w-24"></div>
           </div>
         </div>
-
-        <!-- Chart Container -->
         <div
           class="bg-alternate-light dark:bg-soft-black shadow rounded p-4 flex-1 w-full md:w-1/2 h-80"
         >
-          <div v-if="!isLoading" class="h-72">
-            <CommentsChart />
-          </div>
-          <div v-else class="flex justify-center items-center h-80">
+          <div class="flex justify-center items-center h-full">
             <ArrowPathIcon class="h-16 w-16 animate-spin text-bright-blue" />
           </div>
         </div>
       </div>
 
-      <!-- Numerical Insights Section -->
-      <div class="p-4 flex-1">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <!-- Longest Post Card -->
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
-            <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Longest Post
-            </h3>
-            <p v-if="!isLoading && longestPost" class="text-charcoal dark:text-soft-gray">
-              {{ longestPost.title }}
-            </p>
-            <div v-else class="w-full">
-              <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+      <div v-else-if="error" class="p-4 text-red-500 text-center">
+        {{ error }}
+      </div>
+
+      <div v-else>
+        <div class="p-4 flex flex-col md:flex-row items-start gap-4">
+          <div
+            class="bg-alternate-light dark:bg-soft-black shadow rounded p-6 md:h-80 w-full md:w-1/2 flex flex-col gap-4"
+          >
+            <div class="flex flex-col items-start">
+              <h3 class="text-lg font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Total Posts
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray text-4xl font-bold">
+                {{ totalPosts }}
+              </p>
             </div>
-            <p v-if="!isLoading" class="mt-2 text-charcoal dark:text-soft-gray">
-              {{ longestPostLength }} characters
-            </p>
-            <div
-              v-else
-              class="w-1/2 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mt-2"
-            ></div>
-          </div>
-
-          <!-- Shortest Post Card -->
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
-            <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Shortest Post
-            </h3>
-            <p v-if="!isLoading && shortestPost" class="text-charcoal dark:text-soft-gray">
-              {{ shortestPost.title }}
-            </p>
-            <div v-else class="w-full">
-              <div class="h-6 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+            <div class="flex flex-col items-start">
+              <h3 class="text-lg font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Total Comments
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray text-4xl font-bold">
+                {{ totalComments }}
+              </p>
             </div>
-            <p v-if="!isLoading" class="mt-2 text-charcoal dark:text-soft-gray">
-              {{ shortestPostLength }} characters
-            </p>
-            <div
-              v-else
-              class="w-1/2 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mt-2"
-            ></div>
           </div>
-
-          <!-- Average Length Card -->
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
-            <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Average Length
-            </h3>
-            <p v-if="!isLoading" class="text-charcoal dark:text-soft-gray">
-              {{ insights.average }} characters
-            </p>
-            <div v-else class="w-3/4 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
+          <div
+            class="bg-alternate-light dark:bg-soft-black shadow rounded p-4 flex-1 w-full md:w-1/2 h-80"
+          >
+            <div class="h-72">
+              <CommentsChart />
+            </div>
           </div>
+        </div>
 
-          <!-- Median Length Card -->
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
-            <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Median Length
-            </h3>
-            <p v-if="!isLoading" class="text-charcoal dark:text-soft-gray">
-              {{ insights.median }} characters
-            </p>
-            <div v-else class="w-3/4 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-          </div>
-
-          <!-- Minimum Length Card -->
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
-            <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Minimum Length
-            </h3>
-            <p v-if="!isLoading" class="text-charcoal dark:text-soft-gray">
-              {{ insights.min }} characters
-            </p>
-            <div v-else class="w-1/2 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
-          </div>
-
-          <!-- Maximum Length Card -->
-          <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
-            <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
-              Maximum Length
-            </h3>
-            <p v-if="!isLoading" class="text-charcoal dark:text-soft-gray">
-              {{ insights.max }} characters
-            </p>
-            <div v-else class="w-1/2 h-4 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></div>
+        <div class="p-4 flex-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
+              <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Longest Post
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray">
+                {{ longestPost.title }}
+              </p>
+              <p class="mt-2 text-charcoal dark:text-soft-gray">
+                {{ longestPostLength }} characters
+              </p>
+            </div>
+            <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
+              <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Shortest Post
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray">
+                {{ shortestPost.title }}
+              </p>
+              <p class="mt-2 text-charcoal dark:text-soft-gray">
+                {{ shortestPostLength }} characters
+              </p>
+            </div>
+            <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
+              <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Average Length
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray">{{ insights.average }} characters</p>
+            </div>
+            <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
+              <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Median Length
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray">{{ insights.median }} characters</p>
+            </div>
+            <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
+              <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Minimum Length
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray">{{ insights.min }} characters</p>
+            </div>
+            <div class="bg-alternate-light dark:bg-soft-black shadow rounded p-4">
+              <h3 class="text-xl font-semibold mb-2 text-charcoal dark:text-soft-gray">
+                Maximum Length
+              </h3>
+              <p class="text-charcoal dark:text-soft-gray">{{ insights.max }} characters</p>
+            </div>
           </div>
         </div>
       </div>
@@ -158,6 +130,8 @@ const isLoadingPosts = computed(() => store.getters['posts/isLoadingPosts']);
 
 const comments = computed(() => store.getters['comments/allComments']);
 const isLoadingComments = computed(() => store.getters['comments/isLoadingAllComments']);
+
+const error = computed(() => store.getters['ui/error']);
 
 const postLengths = computed(() => posts.value.map((post) => post.body.length));
 

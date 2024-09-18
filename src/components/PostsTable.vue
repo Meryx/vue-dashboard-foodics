@@ -106,9 +106,15 @@
                   Title
                 </th>
                 <th
-                  class="w-2/3 px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray"
+                  class="px-5 py-3 border-b-2 border-soft-gray dark:border-medium-gray text-left text-sm font-semibold uppercase tracking-wider text-charcoal dark:text-soft-gray flex justify-between items-center"
                 >
-                  Body
+                  BODY
+                  <button
+                    @click="fetchData(true)"
+                    class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
+                  >
+                    <ArrowPathIcon class="h-6 w-6" />
+                  </button>
                 </th>
               </tr>
             </thead>
@@ -253,7 +259,11 @@ import {
 
 const store = useStore();
 
-store.dispatch('posts/fetchPosts');
+const fetchData = (force = false) => {
+  store.dispatch('posts/fetchPosts', force);
+};
+
+fetchData();
 
 const posts = computed(() => store.getters['posts/allPosts']);
 const isLoading = computed(() => store.getters['posts/isLoading']);
