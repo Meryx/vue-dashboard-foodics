@@ -1,5 +1,9 @@
 # Vue Dashboard Foodics
 
+## LIVE
+
+<https://vue-dashboard-foodics.vercel.app>
+
 ## Table of Contents
 
 - [About the Project](#about-the-project)
