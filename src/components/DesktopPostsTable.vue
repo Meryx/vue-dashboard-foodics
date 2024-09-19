@@ -16,7 +16,7 @@
           >
             <strong>Body</strong>
             <button
-              @click="refreshData(true)"
+              @click="refreshData"
               class="px-2 py-1 bg-light-gray dark:bg-dark-gray text-charcoal dark:text-soft-gray rounded-md hover:bg-soft-gray dark:hover:bg-medium-gray disabled:opacity-50"
             >
               <ArrowPathIcon class="h-6 w-6" />
@@ -76,8 +76,10 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref } from 'vue';
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
+
+const postsTableScroll = ref(null);
 
 defineProps({
   posts: Array,
@@ -95,8 +97,8 @@ const openPostModal = (post) => {
   emit('openPostModal', post);
 };
 
-const refreshData = (force) => {
-  emit('refreshData', force);
+const refreshData = () => {
+  emit('refreshData');
 };
 
 const highlightMatch = (text, search) => {
@@ -104,6 +106,14 @@ const highlightMatch = (text, search) => {
   const searchRegex = new RegExp(`(${search})`, 'gi');
   return text.replace(searchRegex, '<strong class="font-bold">$1</strong>');
 };
+
+const resetScroll = () => {
+  if (postsTableScroll.value) postsTableScroll.value.scrollTop = 0;
+};
+
+defineExpose({
+  resetScroll,
+});
 
 const buttonClasses = [
   'text-bright-blue hover:underline focus:outline-none dark:text-bright-blue dark:hover:underline',
