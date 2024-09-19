@@ -33,7 +33,7 @@
           />
         </button>
 
-        <!-- Dropdown Menu -->
+        <!-- Mock drop down menu just for demonstration -->
         <transition name="fade">
           <div
             v-if="isDropdownOpen"

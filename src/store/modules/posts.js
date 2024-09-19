@@ -15,7 +15,7 @@ const mutations = {
 
 const actions = {
   async fetchPosts({ commit, state }, force) {
-    if (state.posts.length > 0 && !force) return;
+    if (state.posts.length > 0 && !force) return; //Force options to ignore the cache
     commit('SET_LOADING_POSTS', true);
     commit('ui/CLEAR_ERROR', null, { root: true });
     try {

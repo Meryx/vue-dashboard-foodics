@@ -160,11 +160,6 @@ const error = computed(() => store.getters['ui/error']);
 
 const postLengths = computed(() => posts.value.map((post) => post.body.length));
 
-/**
- * Calculate various insights based on post lengths.
- * @param {number[]} lengths - Array of post lengths.
- * @returns {Object} - An object containing min, max, average, median, and totalPosts.
- */
 const calculateInsights = (lengths) => {
   const sortedLengths = [...lengths].sort((a, b) => a - b);
   const total = lengths.reduce((sum, len) => sum + len, 0);

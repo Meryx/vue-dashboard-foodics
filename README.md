@@ -1,77 +1,95 @@
-# Vue.js Dashboard Application
-
-To be filled later...
+# Vue Dashboard Foodics
 
 ## Table of Contents
 
-- [Features](#features)
+- [About the Project](#about-the-project)
 - [Technologies Used](#technologies-used)
-- [Color Palette](#color-palette)
+- [Run Locally](#run-locally)
+- [Project Structure](#project-structure)
+- [Some Features](#some-features)
+- [Assumptions](#assumptions)
+- [Possible Improvements](#possible-improvements)
 
-## Features
+## About the Project
 
-- **Responsive Dashboard Layout**
-
-  - Fixed header with a title and user avatar.
-  - Collapsible sidebar with navigation links.
-  - Main content area displaying data from the API.
-
-- **API Integration**
-
-  - Fetches posts from the JSONPlaceholder API.
-  - Displays posts in a table format.
-  - "Read more" functionality to expand truncated post bodies.
-
-- **Post Details Modal**
-
-  - Clicking on a post title opens a modal.
-  - Displays post details, user information, and comments.
-
-- **Dark Mode Toggle**
-
-  - Users can switch between light and dark themes.
-  - Theme preference is saved in local storage.
+This dashboard application provides insights into posts and comments data fetched from a public API. It offers functionalities such as viewing, searching, and analyzing data with interactive charts and statistics.
 
 ## Technologies Used
 
+- **Vite**
 - **Vue.js 3**
-- **Tailwind CSS**
 - **Vue Router**
+- **Vuex**
+- **Chart.js**
+- **Heroicons**
+- **JSONPlaceholder API**
+- **Tailwind CSS**
 
-## Color Palette
+## Run Locally
 
-This application utilizes Tailwind CSS's predefined colors.
+To run this project locally:
 
-### Light Mode
+```bash
+git  clone  https://github.com/Meryx/vue-dashboard-foodics.git
+cd  vue-dashboard-foodics
+npm  install
+npm  run  dev
+```
 
-- **Site Background**: `#EDEDED` (Very Light Gray)
-- **Sidebar**:
-  - **Background**: `#F5F5F5` (Light Gray)
-  - **Text**: `#333333` (Charcoal)
-  - **Item Hover**: `#E0E0E0` (Soft Gray)
-- **Header**:
-  - **Background**: `#FFFFFF` (White)
-  - **Text**: `#333333` (Charcoal)
-- **Row (Posts)**:
-  - **Background**: `#FAFAFA` (Off-White)
-  - **Text**: `#333333` (Charcoal)
-- **Button**:
-  - **Background**: `#007BFF` (Bright Blue)
-  - **Text**: `#FFFFFF` (White)
+## Project Structure
 
-### Dark Mode
+- **`src/`**: Contains the source code of the application.
+  - **`components/`**: Reusable Vue components.
+  - **`layouts/`**: Layout components for consistent page structure.
+  - **`views/`**: Page components representing different routes.
+  - **`store/`**: Vuex store modules for state management.
+  - **`router/`**: Vue Router configuration.
+  - **`services/`**: Includes the API calls.
+  - **`assets/`**: CSS and avatar used.
 
-- **Site Background**: `#1A1A1A` (Dark Charcoal)
-- **Sidebar**:
-  - **Background**: `#2C2C2C` (Dark Gray)
-  - **Text**: `#E0E0E0` (Light Gray)
-  - **Item Hover**: `#3A3A3A` (Medium Gray)
-- **Header**:
-  - **Background**: `#2A2A2A` (Very Dark Gray)
-  - **Text**: `#E0E0E0` (Light Gray)
-- **Row (Posts)**:
-  - **Background**: `#1E1E1E` (Soft Black)
-  - **Text**: `#E0E0E0` (Light Gray)
-- **Button**:
-  - **Background**: `#007BFF` (Bright Blue)
-  - **Text**: `#FFFFFF` (White)
+## Some Features
+
+- **Caching with Vuex**
+
+  - Implemented caching of fetched data using Vuex to minimize redundant API requests.
+
+- **Pagination (Desktop Version)**
+
+  - Provides paginated views of posts on desktop devices.
+
+- **Infinite Scroll (Mobile Version)**
+
+  - Enables infinite scrolling on mobile devices.
+
+- **Force Refresh Button**
+
+  - Includes a button that allows users to force a data refresh, bypassing the cache to retrieve the most recent data.
+
+- **Collapsible Sidebar**
+
+  - Features a collapsible sidebar that can be toggled to show or hide navigation links.
+
+- **Fixed Header**
+
+  - Implements a fixed header that remains visible at the top of the page during scrolling for constant access to navigation and controls.
+
+- **Dark Mode**
+  - Supports dark mode. Checks system preference.
+
+## Assumptions
+
+- **API Reliability**: It is assumed that the JSONPlaceholder API is consistently available and returns data in the expected format. Any changes to the API may affect data fetching and display.
+
+- **Data Volume**: It is assumed that the volume of posts and comments is manageable. At the moment the API only allows for fetching of all posts at the same time
+
+## Possible Improvements
+
+What to implement:
+
+- Manage more state using Vuex. At this moment I have some sibling communcation just to demonstrate how to bubble events and repropagate them. Would be much easier to just move it to Vuex store.
+
+- Add force refresh to mobile version
+
+- Write tests
+
+Restructuring and factoring out elements into components can also be done if the project grows bigger and needs to re-use these elements.
