@@ -111,8 +111,6 @@ const handleClickOutside = (event) => {
 
 window.addEventListener('click', handleClickOutside);
 
-console.log(import.meta.env.BASE_URL);
-
 onBeforeUnmount(() => {
   window.removeEventListener('click', handleClickOutside);
 });

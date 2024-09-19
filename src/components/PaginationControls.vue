@@ -33,7 +33,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import PaginationButton from './PaginationButton.vue';
 import {
   ChevronDoubleLeftIcon,

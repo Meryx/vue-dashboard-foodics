@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 
 const postsTableScroll = ref(null);

@@ -35,7 +35,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import { ArrowPathIcon } from '@heroicons/vue/24/solid';
 
 defineProps({
